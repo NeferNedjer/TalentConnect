@@ -1,0 +1,19 @@
+{# Hero auth (login / register) #}
+<aside class="auth-hero" aria-hidden="true">
+  {% include 'partials/_auth_hero_bg.html.twig' %}
+  <div class="auth-hero__content">
+    <a href="/" class="auth-hero__brand" aria-label="TalentConnect — Accueil">
+      <img src="{{ asset('images/logo_star.png') }}" alt="" class="auth-hero__brand-icon" width="56" height="56">
+      <span class="auth-hero__brand-name">Talent<span class="logo__accent">Connect</span></span>
+    </a>
+
+    <div class="auth-hero__slogan">
+      <blockquote class="auth-hero__quote">
+        « La scène musicale française a besoin de talents — et de connexions qui comptent. »
+      </blockquote>
+      <p class="auth-hero__cite">Plateforme de référence pour artistes &amp; professionnels</p>
+    </div>
+
+    {% include 'partials/_auth_stats_grid.html.twig' with { wrapper_class: 'auth-hero__stats' } %}
+  </div>
+</aside>

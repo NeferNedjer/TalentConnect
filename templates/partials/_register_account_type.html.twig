@@ -1,0 +1,50 @@
+{# Choix type de compte — cartes + branchement Symfony si le champ existe #}
+<fieldset class="register-type-fieldset">
+  <legend class="form-group__label register-type-fieldset__legend">Choix du type de compte</legend>
+
+  {% if registrationForm.accountType is defined %}
+    <div class="register-type-cards" data-account-type-cards role="group" aria-label="Type de compte">
+      <button type="button" class="register-type-card register-type-card--active" data-account-type="artist" aria-pressed="true">
+        <span class="register-type-card__check" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>
+        <span class="register-type-card__icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v1a7 7 0 0 1-14 0v-1"/><line x1="12" y1="18" x2="12" y2="22"/></svg></span>
+        <span class="register-type-card__content">
+          <span class="register-type-card__title">Je suis un artiste</span>
+          <span class="register-type-card__desc">Je souhaite présenter mon profil, publier mes vidéos et répondre aux opportunités.</span>
+        </span>
+      </button>
+      <button type="button" class="register-type-card" data-account-type="professional" aria-pressed="false">
+        <span class="register-type-card__check" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>
+        <span class="register-type-card__icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3v5zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3v5z"/></svg></span>
+        <span class="register-type-card__content">
+          <span class="register-type-card__title">Je suis un professionnel</span>
+          <span class="register-type-card__desc">Je souhaite découvrir des artistes et publier des opportunités.</span>
+        </span>
+      </button>
+    </div>
+    <div class="register-type-field register-type-field--hidden">
+      {{ form_widget(registrationForm.accountType, { attr: { 'data-account-type-field': 'true', class: 'register-type-field__input' } }) }}
+      {{ form_errors(registrationForm.accountType) }}
+    </div>
+  {% else %}
+    <div class="register-type-cards" data-account-type-cards role="group" aria-label="Type de compte">
+      <button type="button" class="register-type-card register-type-card--active" data-account-type="artist" aria-pressed="true">
+        <span class="register-type-card__check" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>
+        <span class="register-type-card__icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v1a7 7 0 0 1-14 0v-1"/><line x1="12" y1="18" x2="12" y2="22"/></svg></span>
+        <span class="register-type-card__content">
+          <span class="register-type-card__title">Je suis un artiste</span>
+          <span class="register-type-card__desc">Je souhaite présenter mon profil, publier mes vidéos et répondre aux opportunités.</span>
+        </span>
+      </button>
+      <button type="button" class="register-type-card" data-account-type="professional" aria-pressed="false">
+        <span class="register-type-card__check" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>
+        <span class="register-type-card__icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3v5zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3v5z"/></svg></span>
+        <span class="register-type-card__content">
+          <span class="register-type-card__title">Je suis un professionnel</span>
+          <span class="register-type-card__desc">Je souhaite découvrir des artistes et publier des opportunités.</span>
+        </span>
+      </button>
+    </div>
+    {# Préparation branchement Symfony — sans name pour ne pas impacter le POST MVP #}
+    <input type="hidden" value="artist" data-account-type-field aria-hidden="true" tabindex="-1">
+  {% endif %}
+</fieldset>

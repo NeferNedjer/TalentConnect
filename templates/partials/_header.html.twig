@@ -1,0 +1,37 @@
+{# Header public — {% include 'partials/_header.html.twig' %} #}
+<header class="header">
+  <div class="container header__inner">
+    {% include 'partials/_logo.html.twig' with { home_url: home_url|default('/') } %}
+
+    <nav class="nav" aria-label="Navigation principale">
+      <a href="/" class="nav__link{{ app.request.get('_route') == 'app_home' ? ' nav__link--active' : '' }}">Accueil</a>
+      <a href="#" class="nav__link">Artistes</a>
+      <a href="#" class="nav__link">Opportunités</a>
+
+      <div class="header__actions header__actions--mobile">
+        {% if app.user %}
+          <a href="{{ path('app_logout') }}" class="btn btn--secondary btn--block">Déconnexion</a>
+        {% else %}
+          <a href="{{ path('app_login') }}" class="btn btn--secondary btn--block">Connexion</a>
+          <a href="#" class="btn btn--primary btn--block">Inscription</a>
+        {% endif %}
+      </div>
+    </nav>
+
+    <div class="header__actions">
+      {% if app.user %}
+        <span class="header__user">{{ app.user.userIdentifier }}</span>
+        <a href="{{ path('app_logout') }}" class="btn btn--secondary btn--sm">Déconnexion</a>
+      {% else %}
+        <a href="{{ path('app_login') }}" class="btn btn--secondary btn--sm">Connexion</a>
+        <a href="#" class="btn btn--primary btn--sm">Inscription</a>
+      {% endif %}
+    </div>
+
+    <button class="nav-toggle" type="button" aria-label="Ouvrir le menu" aria-expanded="false">
+      <span class="nav-toggle__bar"></span>
+      <span class="nav-toggle__bar"></span>
+      <span class="nav-toggle__bar"></span>
+    </button>
+  </div>
+</header>

@@ -1,0 +1,256 @@
+/**
+ * TalentConnect — JS minimal pour Symfony (nav, header, toasts, auth décoratif)
+ * Compatible Turbo Drive (symfony/ux-turbo)
+ */
+(function () {
+  'use strict';
+
+  let globalBound = false;
+  let navBound = false;
+
+  document.addEventListener('DOMContentLoaded', boot);
+  document.addEventListener('turbo:load', boot);
+  document.addEventListener('turbo:render', initPage);
+
+  function boot() {
+    bindGlobalHandlers();
+    initPage();
+  }
+
+  function initPage() {
+    initMobileNav();
+    initHeaderScroll();
+    initScrollReveal();
+    initRegisterAccountType();
+    initRegisterForm();
+  }
+
+  function bindGlobalHandlers() {
+    if (globalBound) return;
+    globalBound = true;
+
+    document.addEventListener('click', function (e) {
+      const forgot = e.target.closest('[data-forgot-password]');
+      if (forgot) {
+        e.preventDefault();
+        showToast('Email de réinitialisation envoyé — fonctionnalité à venir.');
+        return;
+      }
+
+      const oauth = e.target.closest('[data-oauth]');
+      if (oauth) {
+        const provider = oauth.dataset.oauth === 'google' ? 'Google' : 'Apple';
+        showToast('Connexion ' + provider + ' — fonctionnalité à venir.');
+      }
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Escape') return;
+      const nav = document.querySelector('.nav');
+      if (nav?.classList.contains('nav--open')) {
+        closeMobileNav();
+      }
+    });
+  }
+
+  function initMobileNav() {
+    const toggle = document.querySelector('.nav-toggle');
+    const nav = document.querySelector('.nav');
+    const overlay = document.querySelector('.nav-overlay');
+
+    if (!toggle || !nav) return;
+
+    if (navBound) return;
+    navBound = true;
+
+    toggle.addEventListener('click', function () {
+      if (nav.classList.contains('nav--open')) {
+        closeMobileNav();
+      } else {
+        openMobileNav();
+      }
+    });
+
+    overlay?.addEventListener('click', closeMobileNav);
+
+    nav.querySelectorAll('.nav__link, .header__actions--mobile a').forEach(function (link) {
+      link.addEventListener('click', closeMobileNav);
+    });
+  }
+
+  function openMobileNav() {
+    const toggle = document.querySelector('.nav-toggle');
+    const nav = document.querySelector('.nav');
+    const overlay = document.querySelector('.nav-overlay');
+
+    toggle?.classList.add('nav-toggle--open');
+    nav?.classList.add('nav--open');
+    overlay?.classList.add('nav-overlay--visible');
+    toggle?.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeMobileNav() {
+    const toggle = document.querySelector('.nav-toggle');
+    const nav = document.querySelector('.nav');
+    const overlay = document.querySelector('.nav-overlay');
+
+    toggle?.classList.remove('nav-toggle--open');
+    nav?.classList.remove('nav--open');
+    overlay?.classList.remove('nav-overlay--visible');
+    toggle?.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+  }
+
+  function initHeaderScroll() {
+    const header = document.querySelector('.header');
+    if (!header || header.dataset.tcScrollBound) return;
+
+    header.dataset.tcScrollBound = 'true';
+
+    function onScroll() {
+      header.classList.toggle('header--scrolled', window.scrollY > 20);
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  }
+
+  function initScrollReveal() {
+    document.querySelectorAll('.reveal').forEach(function (el) {
+      /* Cartes auth : visible immédiatement (Turbo ne relance pas DOMContentLoaded) */
+      if (el.closest('.auth-main')) {
+        el.classList.add('reveal--visible');
+        return;
+      }
+
+      el.classList.remove('reveal--visible');
+    });
+
+    const toObserve = document.querySelectorAll('.reveal:not(.reveal--visible)');
+    if (!toObserve.length) return;
+
+    const observer = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('reveal--visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
+    );
+
+    toObserve.forEach(function (el) {
+      observer.observe(el);
+    });
+  }
+
+  function initRegisterAccountType() {
+    const group = document.querySelector('[data-account-type-cards]');
+    if (!group || group.dataset.tcAccountBound) return;
+
+    group.dataset.tcAccountBound = 'true';
+
+    const form = document.querySelector('[data-register-form]');
+    const field = form?.querySelector('[data-account-type-field]') || document.querySelector('[data-account-type-field]');
+
+    function syncField(value) {
+      if (!field) return;
+
+      if (field.tagName === 'SELECT') {
+        field.value = value;
+        field.dispatchEvent(new Event('change', { bubbles: true }));
+        return;
+      }
+
+      if (field.type === 'radio') {
+        form?.querySelectorAll('[data-account-type-field]').forEach(function (input) {
+          input.checked = input.value === value;
+        });
+        return;
+      }
+
+      field.value = value;
+    }
+
+    group.querySelectorAll('[data-account-type]').forEach(function (card) {
+      card.addEventListener('click', function () {
+        const value = card.dataset.accountType;
+
+        group.querySelectorAll('[data-account-type]').forEach(function (c) {
+          c.classList.remove('register-type-card--active');
+          c.setAttribute('aria-pressed', 'false');
+        });
+        card.classList.add('register-type-card--active');
+        card.setAttribute('aria-pressed', 'true');
+        syncField(value);
+      });
+    });
+
+    const active = group.querySelector('.register-type-card--active');
+    if (active && field) {
+      syncField(active.dataset.accountType);
+    }
+  }
+
+  function initRegisterForm() {
+    const form = document.querySelector('[data-register-form]');
+    if (!form || form.dataset.tcRegisterBound) return;
+
+    form.dataset.tcRegisterBound = 'true';
+
+    const password = form.querySelector('[data-password-main]');
+    const confirm = form.querySelector('[data-password-confirm]');
+    const confirmError = form.querySelector('[data-password-confirm-error]');
+
+    if (!password || !confirm) return;
+
+    function clearConfirmError() {
+      confirm.classList.remove('form-group__input--error');
+      if (confirmError) confirmError.hidden = true;
+    }
+
+    confirm.addEventListener('input', clearConfirmError);
+    password.addEventListener('input', clearConfirmError);
+
+    form.addEventListener('submit', function (e) {
+      if (password.value !== confirm.value) {
+        e.preventDefault();
+        confirm.classList.add('form-group__input--error');
+        if (confirmError) confirmError.hidden = false;
+        confirm.focus();
+        showToast('Les mots de passe ne correspondent pas.');
+      }
+    });
+  }
+
+  function showToast(message) {
+    document.querySelector('.toast')?.remove();
+
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.innerHTML =
+      '<svg class="toast__icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">' +
+      '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>' +
+      '<polyline points="22 4 12 14.01 9 11.01"/>' +
+      '</svg>' +
+      '<span>' + message + '</span>';
+
+    document.body.appendChild(toast);
+
+    requestAnimationFrame(function () {
+      toast.classList.add('toast--visible');
+    });
+
+    setTimeout(function () {
+      toast.classList.remove('toast--visible');
+      setTimeout(function () {
+        toast.remove();
+      }, 300);
+    }, 4000);
+  }
+
+  window.TalentConnect = { showToast: showToast };
+})();

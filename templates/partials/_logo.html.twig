@@ -1,0 +1,5 @@
+{# Logo TalentConnect — {% include 'partials/_logo.html.twig' with { home_url: path('app_login'), extra_class: 'auth-hero__logo' } %} #}
+<a href="{{ home_url|default(path('app_login')) }}" class="logo{{ extra_class is defined ? ' ' ~ extra_class : '' }}" aria-label="TalentConnect — Accueil">
+  <img src="{{ asset('images/logo_star.png') }}" alt="" class="logo__icon" width="56" height="56">
+  Talent<span class="logo__accent">Connect</span>
+</a>

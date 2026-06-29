@@ -1,0 +1,49 @@
+{# Footer — {% include 'partials/_footer.html.twig' %} #}
+<footer class="footer">
+  <div class="container">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        {% include 'partials/_logo.html.twig' with { home_url: '/' } %}
+        <p class="footer__desc">La plateforme de référence pour découvrir de nouveaux talents musicaux locaux et connecter artistes émergents et professionnels de l'industrie.</p>
+      </div>
+      <div>
+        <h4 class="footer__title">Plateforme</h4>
+        <ul class="footer__links">
+          <li><a href="#" class="footer__link">Découvrir les artistes</a></li>
+          <li><a href="#" class="footer__link">Devenir artiste</a></li>
+          <li><a href="#" class="footer__link">Espace professionnel</a></li>
+          <li><a href="#" class="footer__link">Opportunités</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="footer__title">Légal</h4>
+        <ul class="footer__links">
+          <li><a href="#" class="footer__link">Conditions générales</a></li>
+          <li><a href="#" class="footer__link">Politique de confidentialité</a></li>
+          <li><a href="#" class="footer__link">Mentions légales</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="footer__title">Contact</h4>
+        <ul class="footer__links">
+          <li><a href="#" class="footer__link">Nous contacter</a></li>
+          <li><a href="#" class="footer__link">Centre d'aide</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <p class="footer__copyright">&copy; {{ 'now'|date('Y') }} TalentConnect. Tous droits réservés.</p>
+      <div class="footer__social">
+        <a href="#" class="footer__social-link" aria-label="Instagram">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+        </a>
+        <a href="#" class="footer__social-link" aria-label="Twitter">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg>
+        </a>
+        <a href="#" class="footer__social-link" aria-label="LinkedIn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>

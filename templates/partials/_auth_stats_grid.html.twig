@@ -1,0 +1,24 @@
+{# Grille stats auth — {% include 'partials/_auth_stats_grid.html.twig' with { wrapper_class: 'auth-hero__stats' } %} #}
+<div class="{{ wrapper_class|default('auth-hero__stats') }}" aria-label="Chiffres clés TalentConnect">
+  <div class="auth-stat">
+    <span class="auth-stat__icon" aria-hidden="true">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v1a7 7 0 0 1-14 0v-1"/><line x1="12" y1="18" x2="12" y2="22"/></svg>
+    </span>
+    <span class="auth-stat__value">12 000</span>
+    <span class="auth-stat__label">artistes</span>
+  </div>
+  <div class="auth-stat">
+    <span class="auth-stat__icon" aria-hidden="true">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3v5zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3v5z"/></svg>
+    </span>
+    <span class="auth-stat__value">1 500</span>
+    <span class="auth-stat__label">professionnels</span>
+  </div>
+  <div class="auth-stat">
+    <span class="auth-stat__icon" aria-hidden="true">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+    </span>
+    <span class="auth-stat__value">8 000</span>
+    <span class="auth-stat__label">vidéos</span>
+  </div>
+</div>
