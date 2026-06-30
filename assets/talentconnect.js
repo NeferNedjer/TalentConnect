@@ -21,7 +21,6 @@
     initMobileNav();
     initHeaderScroll();
     initScrollReveal();
-    initRegisterAccountType();
     initRegisterForm();
   }
 
@@ -145,54 +144,6 @@
     toObserve.forEach(function (el) {
       observer.observe(el);
     });
-  }
-
-  function initRegisterAccountType() {
-    const group = document.querySelector('[data-account-type-cards]');
-    if (!group || group.dataset.tcAccountBound) return;
-
-    group.dataset.tcAccountBound = 'true';
-
-    const form = document.querySelector('[data-register-form]');
-    const field = form?.querySelector('[data-account-type-field]') || document.querySelector('[data-account-type-field]');
-
-    function syncField(value) {
-      if (!field) return;
-
-      if (field.tagName === 'SELECT') {
-        field.value = value;
-        field.dispatchEvent(new Event('change', { bubbles: true }));
-        return;
-      }
-
-      if (field.type === 'radio') {
-        form?.querySelectorAll('[data-account-type-field]').forEach(function (input) {
-          input.checked = input.value === value;
-        });
-        return;
-      }
-
-      field.value = value;
-    }
-
-    group.querySelectorAll('[data-account-type]').forEach(function (card) {
-      card.addEventListener('click', function () {
-        const value = card.dataset.accountType;
-
-        group.querySelectorAll('[data-account-type]').forEach(function (c) {
-          c.classList.remove('register-type-card--active');
-          c.setAttribute('aria-pressed', 'false');
-        });
-        card.classList.add('register-type-card--active');
-        card.setAttribute('aria-pressed', 'true');
-        syncField(value);
-      });
-    });
-
-    const active = group.querySelector('.register-type-card--active');
-    if (active && field) {
-      syncField(active.dataset.accountType);
-    }
   }
 
   function initRegisterForm() {

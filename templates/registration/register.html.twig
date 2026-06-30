@@ -37,8 +37,6 @@
           </div>
         {% endif %}
 
-        {% include 'partials/_register_account_type.html.twig' %}
-
         <div class="form-group">
           {{ form_label(registrationForm.email, 'Adresse e-mail', { label_attr: { class: 'form-group__label' } }) }}
           {{ form_widget(registrationForm.email, {

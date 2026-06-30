@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Choisir son profil | TalentConnect
+{% endblock %}
+
+{% block body_class %}profile-choice-page
+{% endblock %}
+
+{% block body %}
+	<section class="profile-choice">
+		<div class="container profile-choice__container">
+			<header class="profile-choice__header reveal">
+				<h1 class="profile-choice__title">Bienvenue sur TalentConnect</h1>
+				<p class="profile-choice__subtitle">Votre compte a bien été créé.</p>
+				<p class="profile-choice__lead">Choisissez le profil que vous souhaitez créer.</p>
+			</header>
+
+			<div class="profile-choice__grid">
+				<article class="profile-choice-card reveal">
+					<span class="profile-choice-card__icon" aria-hidden="true">
+						<svg width="28" height="28" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v1a7 7 0 0 1-14 0v-1"/><line x1="12" y1="18" x2="12" y2="22"/></svg>
+					</span>
+					<h2 class="profile-choice-card__title">Je suis un artiste</h2>
+					<p class="profile-choice-card__text">
+						Créer mon profil artiste afin de publier mes vidéos, présenter mon univers musical et candidater aux opportunités.
+					</p>
+					<a href="{{ path('app_artist_profile_create') }}" class="btn btn--primary btn--block profile-choice-card__btn">Créer mon profil artiste</a>
+
+				</article>
+
+				<article class="profile-choice-card reveal">
+					<span class="profile-choice-card__icon" aria-hidden="true">
+						<svg width="28" height="28" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3v5zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3v5z"/></svg>
+					</span>
+					<h2 class="profile-choice-card__title">Je suis un professionnel</h2>
+					<p class="profile-choice-card__text">
+						Créer mon profil professionnel afin de rechercher des artistes, publier des opportunités et contacter des talents.
+					</p>
+					<a href="{{ path('app_professional_profile_create') }}" class="btn btn--primary btn--block profile-choice-card__btn">Créer mon profil professionnel</a>
+
+				</article>
+			</div>
+		</div>
+	</section>
+{% endblock %}
