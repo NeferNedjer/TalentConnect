@@ -52,6 +52,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
+    #[ORM\OneToOne(mappedBy: 'user', targetEntity: ArtistProfile::class)]
+    private ?ArtistProfile $artistProfile = null;
+
+    #[ORM\OneToOne(mappedBy: 'user', targetEntity: ProfessionalProfile::class)]
+    private ?ProfessionalProfile $professionalProfile = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -184,6 +190,38 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setUpdatedAt(?\DateTimeImmutable $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getArtistProfile(): ?ArtistProfile
+    {
+        return $this->artistProfile;
+    }
+
+    public function setArtistProfile(?ArtistProfile $artistProfile): static
+    {
+        $this->artistProfile = $artistProfile;
+
+        if ($artistProfile !== null && $artistProfile->getUser() !== $this) {
+            $artistProfile->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function getProfessionalProfile(): ?ProfessionalProfile
+    {
+        return $this->professionalProfile;
+    }
+
+    public function setProfessionalProfile(?ProfessionalProfile $professionalProfile): static
+    {
+        $this->professionalProfile = $professionalProfile;
+
+        if ($professionalProfile !== null && $professionalProfile->getUser() !== $this) {
+            $professionalProfile->setUser($this);
+        }
 
         return $this;
     }
