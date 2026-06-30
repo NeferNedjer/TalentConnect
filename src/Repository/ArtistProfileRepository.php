@@ -25,4 +25,28 @@ class ArtistProfileRepository extends ServiceEntityRepository
             'deletedAt' => null,
         ]);
     }
+
+    public function countPublicProfiles(): int
+    {
+        return (int) $this->createQueryBuilder('artist')
+            ->select('COUNT(artist.id)')
+            ->andWhere('artist.deletedAt IS NULL')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
+     * @return list<ArtistProfile>
+     */
+    public function findPublicProfilesPaginated(int $offset, int $limit): array
+    {
+        return $this->createQueryBuilder('artist')
+            ->andWhere('artist.deletedAt IS NULL')
+            ->orderBy('artist.profileCompletion', 'DESC')
+            ->addOrderBy('artist.createdAt', 'DESC')
+            ->setFirstResult($offset)
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
 }

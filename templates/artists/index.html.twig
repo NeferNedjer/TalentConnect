@@ -1,0 +1,143 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nos artistes | TalentConnect
+{% endblock %}
+
+{% block body_class %}page-artists
+{% endblock %}
+
+{% block body %}
+	{% set artist_type_labels = {
+  'solo': 'Solo',
+  'groupe': 'Groupe'
+} %}
+
+	<main class="artists-page">
+		<section class="artists-page__header">
+			<div class="container">
+				<div class="artists-page__heading-row reveal">
+					<h1 class="artists-page__title">Nos artistes</h1>
+					<div class="artists-page__count">
+						<span class="artists-page__count-value">{{ totalItems }}</span>
+						artiste{{ totalItems > 1 ? 's' : '' }}
+						inscrit{{ totalItems > 1 ? 's' : '' }}
+					</div>
+				</div>
+				{# <p class="artists-page__subtitle reveal">Découvrez les talents présents sur TalentConnect.</p> #}
+			</div>
+		</section>
+
+		<section class="artists-page__content">
+			<div class="container">
+				{% if artists is empty %}
+					<div class="artists-empty reveal" role="status">
+						<div class="artists-empty__illustration" aria-hidden="true">
+							<svg width="120" height="120" viewbox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<circle cx="60" cy="60" r="58" stroke="currentColor" stroke-width="2" opacity="0.25"/>
+								<path d="M42 78V42l36-6v36" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+								<circle cx="36" cy="78" r="8" fill="currentColor" opacity="0.85"/>
+								<circle cx="72" cy="72" r="8" fill="currentColor" opacity="0.85"/>
+							</svg>
+						</div>
+						<p class="artists-empty__text">Aucun artiste n'est encore inscrit.</p>
+					</div>
+				{% else %}
+					<div class="artists-list-grid">
+						{% for artist in artists %}
+							{% set initials = artist.stageName|trim is not empty
+              ? (artist.stageName|split(' ')|slice(0, 2)|map(v => v|slice(0, 1)|upper)|join)
+              : '?'
+            %}
+							{% set thumb_path = artist.profilePicture ? artist.profilePicture|replace({'/profile/': '/profile/thumbs/'}) : null %}
+
+							<article class="artists-list-card reveal">
+								<a href="{{ path('app_artist_profile_show', { slug: artist.slug }) }}" class="artists-list-card__media">
+									{% if thumb_path %}
+										<img src="{{ asset('uploads/' ~ thumb_path) }}" alt="Photo de {{ artist.stageName }}" class="artists-list-card__image" loading="lazy" width="320" height="320">
+									{% else %}
+										<div class="artists-list-card__placeholder" aria-hidden="true">
+											<svg class="artists-list-card__placeholder-icon" viewbox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+												<path d="M24 48V20l28-5v28" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+												<circle cx="18" cy="48" r="6" stroke="currentColor" stroke-width="2.5"/>
+												<circle cx="46" cy="43" r="6" stroke="currentColor" stroke-width="2.5"/>
+											</svg>
+											<span class="artists-list-card__placeholder-initials">{{ initials }}</span>
+										</div>
+									{% endif %}
+									<div class="artists-list-card__media-overlay"></div>
+								</a>
+
+								<div class="artists-list-card__body">
+									<div class="artists-list-card__heading">
+										<h2 class="artists-list-card__name">
+											<a href="{{ path('app_artist_profile_show', { slug: artist.slug }) }}">{{ artist.stageName }}</a>
+										</h2>
+										{% if artist.isCertified %}
+											<span class="artists-list-card__badge" title="Artiste vérifié">
+												<svg width="14" height="14" viewbox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+												Vérifié
+											</span>
+										{% endif %}
+									</div>
+
+									<div class="artists-list-card__meta">
+										<span class="artists-list-card__type">{{ artist_type_labels[artist.artistType]|default(artist.artistType) }}</span>
+										{% if artist.city or artist.country %}
+											<span class="artists-list-card__location">
+												<svg width="14" height="14" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+												{{ [artist.city, artist.country]|filter(v => v)|join(', ') }}
+											</span>
+										{% endif %}
+									</div>
+
+									<a href="{{ path('app_artist_profile_show', { slug: artist.slug }) }}" class="btn btn--outline-primary btn--sm btn--block artists-list-card__cta">
+										Voir le profil
+									</a>
+								</div>
+							</article>
+						{% endfor %}
+					</div>
+
+					{% if totalPages > 1 %}
+						<nav class="artists-pagination reveal" aria-label="Pagination des artistes">
+							{% if currentPage > 1 %}
+								<a href="{{ path('app_artists', { page: currentPage - 1 }) }}" class="artists-pagination__link artists-pagination__link--prev" rel="prev">
+									← Précédent
+								</a>
+							{% else %}
+								<span class="artists-pagination__link artists-pagination__link--disabled" aria-hidden="true">← Précédent</span>
+							{% endif %}
+
+							<div class="artists-pagination__pages">
+								{% for page in 1..totalPages %}
+									{% if page == currentPage %}
+										<span class="artists-pagination__page artists-pagination__page--active" aria-current="page">{{ page }}</span>
+									{% else %}
+										<a href="{{ path('app_artists', { page: page }) }}" class="artists-pagination__page">{{ page }}</a>
+									{% endif %}
+								{% endfor %}
+							</div>
+
+							{% if currentPage < totalPages %}
+								<a href="{{ path('app_artists', { page: currentPage + 1 }) }}" class="artists-pagination__link artists-pagination__link--next" rel="next">
+									Suivant →
+								</a>
+							{% else %}
+								<span class="artists-pagination__link artists-pagination__link--disabled" aria-hidden="true">Suivant →</span>
+							{% endif %}
+						</nav>
+
+						<p class="artists-pagination__info">
+							{{ totalItems }}
+							artiste{{ totalItems > 1 ? 's' : '' }}
+							— page
+							{{ currentPage }}
+							/
+							{{ totalPages }}
+						</p>
+					{% endif %}
+				{% endif %}
+			</div>
+		</section>
+	</main>
+{% endblock %}

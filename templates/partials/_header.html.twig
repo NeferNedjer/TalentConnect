@@ -5,7 +5,7 @@
 
 		<nav class="nav" aria-label="Navigation principale">
 			<a href="{{ path('app_home') }}" class="nav__link{{ app.request.get('_route') == 'app_home' ? ' nav__link--active' : '' }}">Accueil</a>
-			<a href="#" class="nav__link">Artistes</a>
+			<a href="{{ path('app_artists') }}" class="nav__link{{ app.request.get('_route') == 'app_artists' ? ' nav__link--active' : '' }}">Artistes</a>
 			<a href="#" class="nav__link">Opportunités</a>
 
 			<div class="header__actions header__actions--mobile">
