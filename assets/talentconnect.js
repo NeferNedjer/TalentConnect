@@ -23,6 +23,7 @@
     initScrollReveal();
     initRegisterForm();
     initHomeSearch();
+    initImagePreview();
   }
 
   function bindGlobalHandlers() {
@@ -187,6 +188,40 @@
         confirm.focus();
         showToast('Les mots de passe ne correspondent pas.');
       }
+    });
+  }
+
+  function initImagePreview() {
+    document.querySelectorAll('input[type="file"][data-image-preview]').forEach(function (input) {
+      if (input.dataset.tcImagePreviewBound) return;
+      input.dataset.tcImagePreviewBound = 'true';
+
+      input.addEventListener('change', function () {
+        const targetId = input.dataset.imagePreview;
+        const target = targetId ? document.getElementById(targetId) : null;
+        const file = input.files && input.files[0];
+
+        if (!target) return;
+
+        if (!file || !file.type.startsWith('image/')) {
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function (event) {
+          if (target.dataset.placeholder === 'true') {
+            const img = document.createElement('img');
+            img.id = target.id;
+            img.src = event.target.result;
+            img.alt = '';
+            img.setAttribute('data-image-preview-target', '');
+            target.replaceWith(img);
+          } else {
+            target.src = event.target.result;
+          }
+        };
+        reader.readAsDataURL(file);
+      });
     });
   }
 

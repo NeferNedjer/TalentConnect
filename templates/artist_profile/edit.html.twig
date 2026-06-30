@@ -30,8 +30,12 @@
 
     <div class="artist-profile-edit__layout">
       <aside class="profile-summary-card reveal">
-        <div class="profile-summary-card__avatar" aria-hidden="true">
-          <span>{{ initials }}</span>
+        <div class="profile-summary-card__avatar{% if profilePictureThumb %} profile-summary-card__avatar--image{% endif %}" aria-hidden="true">
+          {% if profilePictureThumb %}
+            <img src="{{ asset('uploads/' ~ profilePictureThumb) }}" alt="" id="artist-profile-picture-preview" class="profile-summary-card__avatar-img">
+          {% else %}
+            <span id="artist-profile-picture-preview" data-placeholder="true">{{ initials }}</span>
+          {% endif %}
         </div>
 
         <h2 class="profile-summary-card__name">{{ display_name }}</h2>
@@ -68,9 +72,48 @@
         {{ form_start(form, {
           attr: {
             class: 'artist-profile-form',
-            novalidate: 'novalidate'
+            novalidate: 'novalidate',
+            enctype: 'multipart/form-data'
           }
         }) }}
+
+        <fieldset class="form-section">
+          <legend class="form-section__legend">Médias</legend>
+
+          <div class="image-upload-grid">
+            <div class="image-upload">
+              <div class="image-upload__preview image-upload__preview--square">
+                {% if profilePictureThumb %}
+                  <img src="{{ asset('uploads/' ~ profilePictureThumb) }}" alt="" id="artist-profile-picture-preview-form" data-image-preview-target>
+                {% else %}
+                  <span class="image-upload__placeholder" id="artist-profile-picture-preview-form" data-image-preview-target data-placeholder="true">{{ initials }}</span>
+                {% endif %}
+              </div>
+              <div class="form-group image-upload__field">
+                {{ form_label(form.profilePictureFile, null, { label_attr: { class: 'form-group__label' } }) }}
+                {{ form_widget(form.profilePictureFile, { attr: { class: 'form-group__input form-group__input--file', 'data-image-preview': 'artist-profile-picture-preview-form' } }) }}
+                <p class="image-upload__hint">JPG, PNG ou WebP — max. 5 Mo — 512×512 px</p>
+                {{ form_errors(form.profilePictureFile) }}
+              </div>
+            </div>
+
+            <div class="image-upload">
+              <div class="image-upload__preview image-upload__preview--banner{% if not coverPictureUrl %} image-upload__preview--placeholder{% endif %}">
+                {% if coverPictureUrl %}
+                  <img src="{{ asset('uploads/' ~ coverPictureUrl) }}" alt="" id="artist-cover-picture-preview" data-image-preview-target>
+                {% else %}
+                  <span class="image-upload__placeholder image-upload__placeholder--banner" id="artist-cover-picture-preview" data-image-preview-target data-placeholder="true">Bannière</span>
+                {% endif %}
+              </div>
+              <div class="form-group image-upload__field">
+                {{ form_label(form.coverPictureFile, null, { label_attr: { class: 'form-group__label' } }) }}
+                {{ form_widget(form.coverPictureFile, { attr: { class: 'form-group__input form-group__input--file', 'data-image-preview': 'artist-cover-picture-preview' } }) }}
+                <p class="image-upload__hint">JPG, PNG ou WebP — max. 5 Mo — 1600×600 px</p>
+                {{ form_errors(form.coverPictureFile) }}
+              </div>
+            </div>
+          </div>
+        </fieldset>
 
         <fieldset class="form-section">
           <legend class="form-section__legend">Informations générales</legend>

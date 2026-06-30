@@ -18,3 +18,32 @@
 /public/assets/
 /assets/vendor/
 ###< symfony/asset-mapper ###
+
+###> uploads ###
+/public/uploads/*
+!/public/uploads/.gitkeep
+!/public/uploads/artists/
+/public/uploads/artists/*
+!/public/uploads/artists/.gitkeep
+!/public/uploads/artists/profile/
+/public/uploads/artists/profile/*
+!/public/uploads/artists/profile/.gitkeep
+!/public/uploads/artists/profile/thumbs/
+/public/uploads/artists/profile/thumbs/*
+!/public/uploads/artists/profile/thumbs/.gitkeep
+!/public/uploads/artists/covers/
+/public/uploads/artists/covers/*
+!/public/uploads/artists/covers/.gitkeep
+!/public/uploads/professionals/
+/public/uploads/professionals/*
+!/public/uploads/professionals/.gitkeep
+!/public/uploads/professionals/logo/
+/public/uploads/professionals/logo/*
+!/public/uploads/professionals/logo/.gitkeep
+!/public/uploads/professionals/logo/thumbs/
+/public/uploads/professionals/logo/thumbs/*
+!/public/uploads/professionals/logo/thumbs/.gitkeep
+!/public/uploads/professionals/covers/
+/public/uploads/professionals/covers/*
+!/public/uploads/professionals/covers/.gitkeep
+###< uploads ###

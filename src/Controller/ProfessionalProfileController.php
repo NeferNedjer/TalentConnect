@@ -8,8 +8,12 @@ use App\Entity\ProfessionalProfile;
 use App\Entity\User;
 use App\Form\ProfessionalProfileType;
 use App\Repository\ProfessionalProfileRepository;
+use App\Exception\ImageUploadException;
+use App\Service\ImageUploadPreset;
+use App\Service\ImageUploader;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -19,6 +23,7 @@ class ProfessionalProfileController extends AbstractController
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
+        private readonly ImageUploader $imageUploader,
     ) {
     }
 
@@ -38,6 +43,20 @@ class ProfessionalProfileController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                $this->handleImageUploads($form, $profile);
+            } catch (ImageUploadException $exception) {
+                $this->addFlash('error', $exception->getMessage());
+
+                return $this->render('professional_profile/edit.html.twig', [
+                    'form' => $form,
+                    'profile' => $profile,
+                    'completion' => $this->calculateProfileCompletion($profile),
+                    'logoThumb' => $this->imageUploader->getThumbPath($profile->getLogo()),
+                    'coverPictureUrl' => $profile->getCoverPicture(),
+                ]);
+            }
+
             $profile->setUpdatedAt(new \DateTimeImmutable());
 
             $this->entityManager->flush();
@@ -51,6 +70,8 @@ class ProfessionalProfileController extends AbstractController
             'form' => $form,
             'profile' => $profile,
             'completion' => $this->calculateProfileCompletion($profile),
+            'logoThumb' => $this->imageUploader->getThumbPath($profile->getLogo()),
+            'coverPictureUrl' => $profile->getCoverPicture(),
         ]);
     }
 
@@ -92,5 +113,28 @@ class ProfessionalProfileController extends AbstractController
         }
 
         return (int) round($filled / \count($fields) * 100);
+    }
+
+    private function handleImageUploads(FormInterface $form, ProfessionalProfile $profile): void
+    {
+        $logoFile = $form->get('logoFile')->getData();
+        if ($logoFile !== null) {
+            $result = $this->imageUploader->upload(
+                $logoFile,
+                ImageUploadPreset::ProfessionalLogo,
+                $profile->getLogo(),
+            );
+            $profile->setLogo($result->getMainPath());
+        }
+
+        $coverPictureFile = $form->get('coverPictureFile')->getData();
+        if ($coverPictureFile !== null) {
+            $result = $this->imageUploader->upload(
+                $coverPictureFile,
+                ImageUploadPreset::ProfessionalCover,
+                $profile->getCoverPicture(),
+            );
+            $profile->setCoverPicture($result->getMainPath());
+        }
     }
 }

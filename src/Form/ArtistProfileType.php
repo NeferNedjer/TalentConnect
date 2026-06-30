@@ -7,11 +7,13 @@ namespace App\Form;
 use App\Entity\ArtistProfile;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Url;
@@ -24,9 +26,18 @@ class ArtistProfileType extends AbstractType
             new Url(message: 'Veuillez entrer une URL valide.', requireTld: false),
         ];
 
+        $imageConstraints = [
+            new File(
+                maxSize: '5M',
+                mimeTypes: ['image/jpeg', 'image/png', 'image/webp'],
+                mimeTypesMessage: 'Veuillez envoyer une image au format JPG, PNG ou WebP (max. 5 Mo).',
+            ),
+        ];
+
         $builder
             ->add('stageName', TextType::class, [
                 'label' => 'Nom de scène',
+                'empty_data' => '',
                 'constraints' => [
                     new NotBlank(message: 'Le nom de scène est obligatoire.'),
                     new Length(max: 120),
@@ -105,6 +116,26 @@ class ArtistProfileType extends AbstractType
                 'empty_data' => null,
                 'default_protocol' => 'https',
                 'constraints' => $urlConstraints,
+            ])
+            ->add('profilePictureFile', FileType::class, [
+                'label' => 'Photo de profil',
+                'mapped' => false,
+                'required' => false,
+                'constraints' => $imageConstraints,
+                'attr' => [
+                    'accept' => 'image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp',
+                    'data-image-preview' => 'artist-profile-picture-preview',
+                ],
+            ])
+            ->add('coverPictureFile', FileType::class, [
+                'label' => 'Bannière',
+                'mapped' => false,
+                'required' => false,
+                'constraints' => $imageConstraints,
+                'attr' => [
+                    'accept' => 'image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp',
+                    'data-image-preview' => 'artist-cover-picture-preview',
+                ],
             ])
         ;
     }

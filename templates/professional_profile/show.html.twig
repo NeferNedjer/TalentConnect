@@ -22,16 +22,26 @@
 %}
 
 <main>
-  <div class="profile-banner profile-banner--placeholder" aria-hidden="true">
-    <div class="profile-banner__overlay"></div>
-  </div>
+  {% if profile.coverPicture %}
+    <div class="profile-banner profile-banner--image" style="--profile-banner-image: url('{{ asset('uploads/' ~ profile.coverPicture) }}');" role="img" aria-label="Bannière de {{ display_name }}">
+      <div class="profile-banner__overlay"></div>
+    </div>
+  {% else %}
+    <div class="profile-banner profile-banner--placeholder" aria-hidden="true">
+      <div class="profile-banner__overlay"></div>
+    </div>
+  {% endif %}
 
   <section class="profile-header">
     <div class="container">
       <div class="profile-header__inner">
-        <div class="profile-header__avatar profile-header__avatar--placeholder profile-header__avatar--logo" aria-hidden="true">
-          <span>{{ initials }}</span>
-        </div>
+        {% if profile.logo %}
+          <img src="{{ asset('uploads/' ~ profile.logo) }}" alt="Logo de {{ display_name }}" class="profile-header__avatar profile-header__avatar--logo">
+        {% else %}
+          <div class="profile-header__avatar profile-header__avatar--placeholder profile-header__avatar--logo" aria-hidden="true">
+            <span>{{ initials }}</span>
+          </div>
+        {% endif %}
 
         <div class="profile-header__info">
           <h1 class="profile-header__name">{{ display_name }}</h1>
