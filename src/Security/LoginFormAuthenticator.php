@@ -2,6 +2,7 @@
 
 namespace App\Security;
 
+use App\Entity\User;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -49,6 +50,16 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
     ): ?Response {
         if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
             return new RedirectResponse($targetPath);
+        }
+
+        $user = $token->getUser();
+
+        if ($user instanceof User) {
+            if ($user->getArtistProfile() !== null || $user->getProfessionalProfile() !== null) {
+                return new RedirectResponse(
+                    $this->urlGenerator->generate('app_my_profile')
+                );
+            }
         }
 
         return new RedirectResponse(

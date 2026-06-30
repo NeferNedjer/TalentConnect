@@ -1,5 +1,5 @@
-/**
- * TalentConnect — JS minimal pour Symfony (nav, header, toasts, auth décoratif)
+﻿/**
+ * TalentConnect â€” JS minimal pour Symfony (nav, header, toasts, auth dÃ©coratif)
  * Compatible Turbo Drive (symfony/ux-turbo)
  */
 (function () {
@@ -22,6 +22,7 @@
     initHeaderScroll();
     initScrollReveal();
     initRegisterForm();
+    initHomeSearch();
   }
 
   function bindGlobalHandlers() {
@@ -32,14 +33,14 @@
       const forgot = e.target.closest('[data-forgot-password]');
       if (forgot) {
         e.preventDefault();
-        showToast('Email de réinitialisation envoyé — fonctionnalité à venir.');
+        showToast('Email de rÃ©initialisation envoyÃ© â€” fonctionnalitÃ© Ã  venir.');
         return;
       }
 
       const oauth = e.target.closest('[data-oauth]');
       if (oauth) {
         const provider = oauth.dataset.oauth === 'google' ? 'Google' : 'Apple';
-        showToast('Connexion ' + provider + ' — fonctionnalité à venir.');
+        showToast('Connexion ' + provider + ' â€” fonctionnalitÃ© Ã  venir.');
       }
     });
 
@@ -117,7 +118,7 @@
 
   function initScrollReveal() {
     document.querySelectorAll('.reveal').forEach(function (el) {
-      /* Cartes auth : visible immédiatement (Turbo ne relance pas DOMContentLoaded) */
+      /* Cartes auth : visible immÃ©diatement (Turbo ne relance pas DOMContentLoaded) */
       if (el.closest('.auth-main')) {
         el.classList.add('reveal--visible');
         return;
@@ -143,6 +144,18 @@
 
     toObserve.forEach(function (el) {
       observer.observe(el);
+    });
+  }
+
+  function initHomeSearch() {
+    document.querySelectorAll('[data-home-search], [data-search-form]').forEach(function (form) {
+      if (form.dataset.tcHomeSearchBound) return;
+      form.dataset.tcHomeSearchBound = 'true';
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        showToast('Recherche â€” fonctionnalitÃ© Ã  venir.');
+      });
     });
   }
 
@@ -205,3 +218,4 @@
 
   window.TalentConnect = { showToast: showToast };
 })();
+

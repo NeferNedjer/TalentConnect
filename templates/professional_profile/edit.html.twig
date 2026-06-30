@@ -1,0 +1,165 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier mon profil professionnel | TalentConnect{% endblock %}
+
+{% block body_class %}artist-profile-edit-page{% endblock %}
+
+{% block body %}
+{% set professional_type_labels = {
+  'label': 'Label',
+  'studio': 'Studio',
+  'producteur': 'Producteur',
+  'manager': 'Manager',
+  'festival': 'Festival',
+  'salle': 'Salle',
+  'organisateur': 'Organisateur',
+  'other': 'Autre'
+} %}
+{% set display_name = profile.companyName|trim is not empty ? profile.companyName : 'Votre entreprise' %}
+{% set initials = profile.companyName|trim is not empty
+  ? (profile.companyName|split(' ')|slice(0, 2)|map(v => v|slice(0, 1)|upper)|join)
+  : '?'
+%}
+
+<main class="artist-profile-edit">
+  <div class="container artist-profile-edit__container">
+    <header class="artist-profile-edit__header reveal">
+      <h1 class="artist-profile-edit__title">Mon profil professionnel</h1>
+      <p class="artist-profile-edit__subtitle">Complétez votre profil pour être visible auprès des artistes de la plateforme.</p>
+    </header>
+
+    {% for label, messages in app.flashes %}
+      {% for message in messages %}
+        <div class="flash-alert flash-alert--{{ label }}" role="alert">{{ message }}</div>
+      {% endfor %}
+    {% endfor %}
+
+    <div class="artist-profile-edit__layout">
+      <aside class="profile-summary-card reveal">
+        <div class="profile-summary-card__avatar profile-summary-card__avatar--logo" aria-hidden="true">
+          <span>{{ initials }}</span>
+        </div>
+
+        <h2 class="profile-summary-card__name">{{ display_name }}</h2>
+
+        <ul class="profile-summary-card__meta">
+          <li>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            {{ profile.city|default('Ville non renseignée') }}
+          </li>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4"/></svg>
+            {{ professional_type_labels[profile.type]|default(profile.type) }}
+          </li>
+        </ul>
+
+        <div class="profile-progress">
+          <div class="profile-progress__header">
+            <span class="profile-progress__label">Progression du profil</span>
+            <span class="profile-progress__value">{{ completion }} %</span>
+          </div>
+          <div class="profile-progress__track" role="progressbar" aria-valuenow="{{ completion }}" aria-valuemin="0" aria-valuemax="100">
+            <span class="profile-progress__bar" style="width: {{ completion }}%;"></span>
+          </div>
+        </div>
+
+        {% if profile.slug %}
+          <a href="{{ path('app_professional_profile_show', { slug: profile.slug }) }}" class="btn btn--secondary btn--block btn--sm profile-summary-card__preview">
+            Voir mon profil public
+          </a>
+        {% endif %}
+      </aside>
+
+      <div class="artist-profile-edit__form reveal">
+        {{ form_start(form, {
+          attr: {
+            class: 'artist-profile-form',
+            novalidate: 'novalidate'
+          }
+        }) }}
+
+        <fieldset class="form-section">
+          <legend class="form-section__legend">Entreprise</legend>
+
+          <div class="form-group">
+            {{ form_label(form.companyName, null, { label_attr: { class: 'form-group__label' } }) }}
+            {{ form_widget(form.companyName, { attr: { class: 'form-group__input', placeholder: 'Ex. Horizon Records' } }) }}
+            {{ form_errors(form.companyName) }}
+          </div>
+
+          <div class="form-group">
+            {{ form_label(form.description, null, { label_attr: { class: 'form-group__label' } }) }}
+            {{ form_widget(form.description, { attr: { class: 'form-group__textarea', placeholder: 'Présentez votre activité, vos services et votre expertise…' } }) }}
+            {{ form_errors(form.description) }}
+          </div>
+
+          <div class="form-group">
+            {{ form_label(form.website, null, { label_attr: { class: 'form-group__label' } }) }}
+            {{ form_widget(form.website, { attr: { class: 'form-group__input', placeholder: 'https://votre-entreprise.fr' } }) }}
+            {{ form_errors(form.website) }}
+          </div>
+
+          <div class="form-group">
+            {{ form_label(form.type, null, { label_attr: { class: 'form-group__label' } }) }}
+            {{ form_widget(form.type, { attr: { class: 'form-group__select' } }) }}
+            {{ form_errors(form.type) }}
+          </div>
+        </fieldset>
+
+        <fieldset class="form-section">
+          <legend class="form-section__legend">Coordonnées</legend>
+
+          <div class="form-row">
+            <div class="form-group">
+              {{ form_label(form.emailPublic, null, { label_attr: { class: 'form-group__label' } }) }}
+              {{ form_widget(form.emailPublic, { attr: { class: 'form-group__input', placeholder: 'contact@votre-entreprise.fr' } }) }}
+              {{ form_errors(form.emailPublic) }}
+            </div>
+            <div class="form-group">
+              {{ form_label(form.telephonePublic, null, { label_attr: { class: 'form-group__label' } }) }}
+              {{ form_widget(form.telephonePublic, { attr: { class: 'form-group__input', placeholder: '+33 6 12 34 56 78' } }) }}
+              {{ form_errors(form.telephonePublic) }}
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset class="form-section">
+          <legend class="form-section__legend">Localisation</legend>
+
+          <div class="form-row">
+            <div class="form-group">
+              {{ form_label(form.city, null, { label_attr: { class: 'form-group__label' } }) }}
+              {{ form_widget(form.city, { attr: { class: 'form-group__input', placeholder: 'Paris' } }) }}
+              {{ form_errors(form.city) }}
+            </div>
+            <div class="form-group">
+              {{ form_label(form.postalCode, null, { label_attr: { class: 'form-group__label' } }) }}
+              {{ form_widget(form.postalCode, { attr: { class: 'form-group__input', placeholder: '75001' } }) }}
+              {{ form_errors(form.postalCode) }}
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              {{ form_label(form.region, null, { label_attr: { class: 'form-group__label' } }) }}
+              {{ form_widget(form.region, { attr: { class: 'form-group__input', placeholder: 'Île-de-France' } }) }}
+              {{ form_errors(form.region) }}
+            </div>
+            <div class="form-group">
+              {{ form_label(form.country, null, { label_attr: { class: 'form-group__label' } }) }}
+              {{ form_widget(form.country, { attr: { class: 'form-group__input', placeholder: 'France' } }) }}
+              {{ form_errors(form.country) }}
+            </div>
+          </div>
+        </fieldset>
+
+        <div class="artist-profile-form__actions">
+          <button type="submit" class="btn btn--primary">Enregistrer mon profil</button>
+        </div>
+
+        {{ form_end(form) }}
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock %}

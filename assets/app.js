@@ -6,4 +6,6 @@ import './stimulus_bootstrap.js';
  * which should already be in your base.html.twig.
  */
 import './styles/app.css';
+import './styles/home.css';
+import './styles/artist-profile.css';
 import './talentconnect.js';

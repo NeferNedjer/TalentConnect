@@ -1,0 +1,178 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier mon profil artiste | TalentConnect{% endblock %}
+
+{% block body_class %}artist-profile-edit-page{% endblock %}
+
+{% block body %}
+{% set artist_type_labels = {
+  'solo': 'Artiste solo',
+  'groupe': 'Groupe'
+} %}
+{% set display_name = profile.stageName|trim is not empty ? profile.stageName : 'Votre nom de scène' %}
+{% set initials = profile.stageName|trim is not empty
+  ? (profile.stageName|split(' ')|slice(0, 2)|map(v => v|slice(0, 1)|upper)|join)
+  : '?'
+%}
+
+<main class="artist-profile-edit">
+  <div class="container artist-profile-edit__container">
+    <header class="artist-profile-edit__header reveal">
+      <h1 class="artist-profile-edit__title">Mon profil artiste</h1>
+      <p class="artist-profile-edit__subtitle">Complétez votre profil pour être visible auprès des professionnels de la musique.</p>
+    </header>
+
+    {% for label, messages in app.flashes %}
+      {% for message in messages %}
+        <div class="flash-alert flash-alert--{{ label }}" role="alert">{{ message }}</div>
+      {% endfor %}
+    {% endfor %}
+
+    <div class="artist-profile-edit__layout">
+      <aside class="profile-summary-card reveal">
+        <div class="profile-summary-card__avatar" aria-hidden="true">
+          <span>{{ initials }}</span>
+        </div>
+
+        <h2 class="profile-summary-card__name">{{ display_name }}</h2>
+
+        <ul class="profile-summary-card__meta">
+          <li>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            {{ profile.city|default('Ville non renseignée') }}
+          </li>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+            {{ artist_type_labels[profile.artistType]|default(profile.artistType) }}
+          </li>
+        </ul>
+
+        <div class="profile-progress">
+          <div class="profile-progress__header">
+            <span class="profile-progress__label">Progression du profil</span>
+            <span class="profile-progress__value">{{ completion }} %</span>
+          </div>
+          <div class="profile-progress__track" role="progressbar" aria-valuenow="{{ completion }}" aria-valuemin="0" aria-valuemax="100">
+            <span class="profile-progress__bar" style="width: {{ completion }}%;"></span>
+          </div>
+        </div>
+
+        {% if profile.slug %}
+          <a href="{{ path('app_artist_profile_show', { slug: profile.slug }) }}" class="btn btn--secondary btn--block btn--sm profile-summary-card__preview">
+            Voir mon profil public
+          </a>
+        {% endif %}
+      </aside>
+
+      <div class="artist-profile-edit__form reveal">
+        {{ form_start(form, {
+          attr: {
+            class: 'artist-profile-form',
+            novalidate: 'novalidate'
+          }
+        }) }}
+
+        <fieldset class="form-section">
+          <legend class="form-section__legend">Informations générales</legend>
+
+          <div class="form-group">
+            {{ form_label(form.stageName, null, { label_attr: { class: 'form-group__label' } }) }}
+            {{ form_widget(form.stageName, { attr: { class: 'form-group__input', placeholder: 'Ex. John Smith' } }) }}
+            {{ form_errors(form.stageName) }}
+          </div>
+
+          <div class="form-group">
+            {{ form_label(form.bio, null, { label_attr: { class: 'form-group__label' } }) }}
+            {{ form_widget(form.bio, { attr: { class: 'form-group__textarea', placeholder: 'Présentez votre univers musical, vos influences, votre parcours…' } }) }}
+            {{ form_errors(form.bio) }}
+          </div>
+
+          <div class="form-group">
+            {{ form_label(form.website, null, { label_attr: { class: 'form-group__label' } }) }}
+            {{ form_widget(form.website, { attr: { class: 'form-group__input', placeholder: 'https://votre-site.fr' } }) }}
+            {{ form_errors(form.website) }}
+          </div>
+
+          <div class="form-group">
+            {{ form_label(form.artistType, null, { label_attr: { class: 'form-group__label' } }) }}
+            {{ form_widget(form.artistType, { attr: { class: 'form-group__select' } }) }}
+            {{ form_errors(form.artistType) }}
+          </div>
+        </fieldset>
+
+        <fieldset class="form-section">
+          <legend class="form-section__legend">Localisation</legend>
+
+          <div class="form-row">
+            <div class="form-group">
+              {{ form_label(form.city, null, { label_attr: { class: 'form-group__label' } }) }}
+              {{ form_widget(form.city, { attr: { class: 'form-group__input', placeholder: 'Lyon' } }) }}
+              {{ form_errors(form.city) }}
+            </div>
+            <div class="form-group">
+              {{ form_label(form.postalCode, null, { label_attr: { class: 'form-group__label' } }) }}
+              {{ form_widget(form.postalCode, { attr: { class: 'form-group__input', placeholder: '69000' } }) }}
+              {{ form_errors(form.postalCode) }}
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              {{ form_label(form.region, null, { label_attr: { class: 'form-group__label' } }) }}
+              {{ form_widget(form.region, { attr: { class: 'form-group__input', placeholder: 'Auvergne-Rhône-Alpes' } }) }}
+              {{ form_errors(form.region) }}
+            </div>
+            <div class="form-group">
+              {{ form_label(form.country, null, { label_attr: { class: 'form-group__label' } }) }}
+              {{ form_widget(form.country, { attr: { class: 'form-group__input', placeholder: 'France' } }) }}
+              {{ form_errors(form.country) }}
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset class="form-section">
+          <legend class="form-section__legend">Réseaux sociaux</legend>
+
+          <div class="form-row">
+            <div class="form-group">
+              {{ form_label(form.spotifyUrl, null, { label_attr: { class: 'form-group__label' } }) }}
+              {{ form_widget(form.spotifyUrl, { attr: { class: 'form-group__input', placeholder: 'https://open.spotify.com/…' } }) }}
+              {{ form_errors(form.spotifyUrl) }}
+            </div>
+            <div class="form-group">
+              {{ form_label(form.youtubeUrl, null, { label_attr: { class: 'form-group__label' } }) }}
+              {{ form_widget(form.youtubeUrl, { attr: { class: 'form-group__input', placeholder: 'https://youtube.com/…' } }) }}
+              {{ form_errors(form.youtubeUrl) }}
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              {{ form_label(form.instagramUrl, null, { label_attr: { class: 'form-group__label' } }) }}
+              {{ form_widget(form.instagramUrl, { attr: { class: 'form-group__input', placeholder: 'https://instagram.com/…' } }) }}
+              {{ form_errors(form.instagramUrl) }}
+            </div>
+            <div class="form-group">
+              {{ form_label(form.facebookUrl, null, { label_attr: { class: 'form-group__label' } }) }}
+              {{ form_widget(form.facebookUrl, { attr: { class: 'form-group__input', placeholder: 'https://facebook.com/…' } }) }}
+              {{ form_errors(form.facebookUrl) }}
+            </div>
+          </div>
+
+          <div class="form-group">
+            {{ form_label(form.tiktokUrl, null, { label_attr: { class: 'form-group__label' } }) }}
+            {{ form_widget(form.tiktokUrl, { attr: { class: 'form-group__input', placeholder: 'https://tiktok.com/…' } }) }}
+            {{ form_errors(form.tiktokUrl) }}
+          </div>
+        </fieldset>
+
+        <div class="artist-profile-form__actions">
+          <button type="submit" class="btn btn--primary">Enregistrer mon profil</button>
+        </div>
+
+        {{ form_end(form) }}
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock %}

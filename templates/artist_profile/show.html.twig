@@ -1,0 +1,101 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ profile.stageName|trim is not empty ? profile.stageName ~ ' — TalentConnect' : 'Profil artiste | TalentConnect' }}{% endblock %}
+
+{% block body_class %}artist-profile-show-page{% endblock %}
+
+{% block body %}
+{% set artist_type_labels = {
+  'solo': 'Artiste solo',
+  'groupe': 'Groupe'
+} %}
+{% set display_name = profile.stageName|trim is not empty ? profile.stageName : 'Artiste TalentConnect' %}
+{% set initials = profile.stageName|trim is not empty
+  ? (profile.stageName|split(' ')|slice(0, 2)|map(v => v|slice(0, 1)|upper)|join)
+  : '?'
+%}
+
+<main>
+  <div class="profile-banner profile-banner--placeholder" aria-hidden="true">
+    <div class="profile-banner__overlay"></div>
+  </div>
+
+  <section class="profile-header">
+    <div class="container">
+      <div class="profile-header__inner">
+        <div class="profile-header__avatar profile-header__avatar--placeholder" aria-hidden="true">
+          <span>{{ initials }}</span>
+        </div>
+
+        <div class="profile-header__info">
+          <h1 class="profile-header__name">{{ display_name }}</h1>
+          <div class="profile-header__meta">
+            <span class="profile-header__meta-item">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+              {{ artist_type_labels[profile.artistType]|default(profile.artistType) }}
+            </span>
+            {% if profile.city or profile.country %}
+              <span class="profile-header__meta-item">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                {{ [profile.city, profile.region, profile.country]|filter(v => v)|join(', ') }}
+              </span>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="container artist-profile-show__content">
+    {% if profile.bio %}
+      <section class="profile-bio reveal">
+        <h2 class="profile-bio__title">Biographie</h2>
+        <div class="profile-bio__text">
+          <p>{{ profile.bio|nl2br }}</p>
+        </div>
+      </section>
+    {% endif %}
+
+    {% if profile.website or profile.spotifyUrl or profile.youtubeUrl or profile.instagramUrl or profile.facebookUrl or profile.tiktokUrl %}
+      <section class="profile-section reveal">
+        <h2 class="profile-section__title">Liens & réseaux</h2>
+        <ul class="profile-links">
+          {% if profile.website %}
+            <li>
+              <a href="{{ profile.website }}" class="profile-links__item" target="_blank" rel="noopener noreferrer">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                Site web
+              </a>
+            </li>
+          {% endif %}
+          {% if profile.spotifyUrl %}
+            <li>
+              <a href="{{ profile.spotifyUrl }}" class="profile-links__item" target="_blank" rel="noopener noreferrer">Spotify</a>
+            </li>
+          {% endif %}
+          {% if profile.youtubeUrl %}
+            <li>
+              <a href="{{ profile.youtubeUrl }}" class="profile-links__item" target="_blank" rel="noopener noreferrer">YouTube</a>
+            </li>
+          {% endif %}
+          {% if profile.instagramUrl %}
+            <li>
+              <a href="{{ profile.instagramUrl }}" class="profile-links__item" target="_blank" rel="noopener noreferrer">Instagram</a>
+            </li>
+          {% endif %}
+          {% if profile.facebookUrl %}
+            <li>
+              <a href="{{ profile.facebookUrl }}" class="profile-links__item" target="_blank" rel="noopener noreferrer">Facebook</a>
+            </li>
+          {% endif %}
+          {% if profile.tiktokUrl %}
+            <li>
+              <a href="{{ profile.tiktokUrl }}" class="profile-links__item" target="_blank" rel="noopener noreferrer">TikTok</a>
+            </li>
+          {% endif %}
+        </ul>
+      </section>
+    {% endif %}
+  </div>
+</main>
+{% endblock %}

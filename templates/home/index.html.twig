@@ -1,0 +1,462 @@
+﻿{% extends 'base.html.twig' %}
+
+{% block title %}TalentConnect — Découvrez les talents musicaux de demain{% endblock %}
+
+{% block body_class %}page-home{% endblock %}
+
+{% block stylesheets %}
+<style>
+  .page-home {
+    --hero-bg-image: url('{{ asset('images/hero/concert.jpg') }}');
+  }
+</style>
+{% endblock %}
+
+{% block body %}
+{% if app.user %}
+  {% if app.user.artistProfile is null and app.user.professionalProfile is null %}
+    {% set cta_artist_url = path('app_choose_profile') %}
+    {% set cta_pro_url = path('app_choose_profile') %}
+  {% else %}
+    {% set cta_artist_url = path('app_my_profile') %}
+    {% set cta_pro_url = path('app_my_profile') %}
+  {% endif %}
+{% else %}
+  {% set cta_artist_url = path('app_register') %}
+  {% set cta_pro_url = path('app_register') %}
+{% endif %}
+
+<main>
+  <!-- Hero principal -->
+  <section class="hero">
+    <div class="hero__bg" aria-hidden="true"></div>
+    <div class="hero__content">
+      <span class="hero__badge">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        Scène live · Découverte de talents
+      </span>
+
+      <h1 class="hero__title">
+        Découvrez les <span>talents musicaux</span> de demain
+      </h1>
+
+      <p class="hero__subtitle">
+        La plateforme qui connecte les artistes émergents aux professionnels de la musique.
+      </p>
+
+      <div class="hero__actions">
+        <a href="{{ cta_artist_url }}" class="btn btn--primary">Je suis artiste</a>
+        <a href="{{ cta_pro_url }}" class="btn btn--secondary">Je suis professionnel</a>
+      </div>
+
+      <!-- Barre de recherche centrale -->
+      <div class="hero__search">
+        {# TODO: brancher la recherche vers la future route dédiée #}
+        <form class="search-bar" data-search-form role="search" aria-label="Rechercher un artiste" action="#" method="get">
+          <svg class="search-bar__icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+          </svg>
+          <input type="search" name="q" class="search-bar__input" placeholder="Rechercher un artiste, un genre, une ville…" aria-label="Terme de recherche">
+          <button type="submit" class="search-bar__btn">Rechercher</button>
+        </form>
+      </div>
+
+      <div class="hero__stats">
+        <div class="hero__stat">
+          <div class="hero__stat-value">2 400+</div>
+          <div class="hero__stat-label">Artistes inscrits</div>
+        </div>
+        <div class="hero__stat">
+          <div class="hero__stat-value">850+</div>
+          <div class="hero__stat-label">Professionnels</div>
+        </div>
+        <div class="hero__stat">
+          <div class="hero__stat-value">15K+</div>
+          <div class="hero__stat-label">Vidéos publiées</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section : Artistes en vedette -->
+  <section class="section section--dark" id="artistes-vedette">
+    <div class="container">
+      <div class="section__header reveal">
+        <div>
+          <h2 class="section__title">Artistes en vedette</h2>
+          <p class="section__subtitle">Les talents qui font vibrer la scène musicale française</p>
+        </div>
+        <a href="#" class="section__link">
+          Voir tous les artistes
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+
+      <div class="artists-grid">
+        <article class="artist-card reveal">
+          <a href="#" class="artist-card__image-wrap">
+            <img src="{{ asset('images/artists/trint-eastwood.jpg') }}" alt="John Smith" class="artist-card__image" loading="lazy">
+            <div class="artist-card__overlay"></div>
+          </a>
+          <div class="artist-card__body">
+            <h3 class="artist-card__name">John Smith</h3>
+            <div class="artist-card__meta">
+              <span class="badge badge--genre">Rock / Blues</span>
+            </div>
+            <p class="artist-card__location">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              Lyon
+            </p>
+            <div class="artist-card__footer">
+              <a href="#" class="btn btn--outline-primary btn--sm btn--block">Voir le profil</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="artist-card reveal">
+          <a href="#" class="artist-card__image-wrap">
+            <img src="{{ asset('images/artists/luna-waves.jpg') }}" alt="Luna Waves" class="artist-card__image" loading="lazy">
+            <div class="artist-card__overlay"></div>
+          </a>
+          <div class="artist-card__body">
+            <h3 class="artist-card__name">Luna Waves</h3>
+            <div class="artist-card__meta">
+              <span class="badge badge--genre">Pop Électro</span>
+            </div>
+            <p class="artist-card__location">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              Paris
+            </p>
+            <div class="artist-card__footer">
+              <a href="#" class="btn btn--outline-primary btn--sm btn--block">Voir le profil</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="artist-card reveal">
+          <a href="#" class="artist-card__image-wrap">
+            <img src="{{ asset('images/artists/mc-horizon.jpg') }}" alt="MC Horizon" class="artist-card__image" loading="lazy">
+            <div class="artist-card__overlay"></div>
+          </a>
+          <div class="artist-card__body">
+            <h3 class="artist-card__name">MC Horizon</h3>
+            <div class="artist-card__meta">
+              <span class="badge badge--genre">Hip-Hop</span>
+            </div>
+            <p class="artist-card__location">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              Marseille
+            </p>
+            <div class="artist-card__footer">
+              <a href="#" class="btn btn--outline-primary btn--sm btn--block">Voir le profil</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="artist-card reveal">
+          <a href="#" class="artist-card__image-wrap">
+            <img src="{{ asset('images/artists/les-echos.jpg') }}" alt="Les Échos" class="artist-card__image" loading="lazy">
+            <div class="artist-card__overlay"></div>
+          </a>
+          <div class="artist-card__body">
+            <h3 class="artist-card__name">Les Échos</h3>
+            <div class="artist-card__meta">
+              <span class="badge badge--genre">Indie Folk</span>
+            </div>
+            <p class="artist-card__location">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              Bordeaux
+            </p>
+            <div class="artist-card__footer">
+              <a href="#" class="btn btn--outline-primary btn--sm btn--block">Voir le profil</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="artist-card reveal">
+          <a href="#" class="artist-card__image-wrap">
+            <img src="{{ asset('images/artists/dj-nova.jpg') }}" alt="DJ Nova" class="artist-card__image" loading="lazy">
+            <div class="artist-card__overlay"></div>
+          </a>
+          <div class="artist-card__body">
+            <h3 class="artist-card__name">DJ Nova</h3>
+            <div class="artist-card__meta">
+              <span class="badge badge--genre">House</span>
+            </div>
+            <p class="artist-card__location">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              Toulouse
+            </p>
+            <div class="artist-card__footer">
+              <a href="#" class="btn btn--outline-primary btn--sm btn--block">Voir le profil</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="artist-card reveal">
+          <a href="#" class="artist-card__image-wrap">
+            <img src="{{ asset('images/artists/amara-soul.jpg') }}" alt="Amara Soul" class="artist-card__image" loading="lazy">
+            <div class="artist-card__overlay"></div>
+          </a>
+          <div class="artist-card__body">
+            <h3 class="artist-card__name">Amara Soul</h3>
+            <div class="artist-card__meta">
+              <span class="badge badge--genre">R&amp;B</span>
+            </div>
+            <p class="artist-card__location">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              Nantes
+            </p>
+            <div class="artist-card__footer">
+              <a href="#" class="btn btn--outline-primary btn--sm btn--block">Voir le profil</a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section : Opportunités du moment -->
+  <section class="section section--warm" id="opportunites">
+    <div class="container">
+      <div class="section__header reveal">
+        <div>
+          <span class="section__eyebrow">Pour les artistes</span>
+          <h2 class="section__title">Opportunités du moment</h2>
+          <p class="section__subtitle">Des professionnels recherchent activement des talents — répondez à leurs appels</p>
+        </div>
+        <a href="#" class="section__link">
+          Voir toutes les opportunités
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+
+      <div class="opportunities-banner reveal">
+        <div class="opportunities-banner__icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
+        <p class="opportunities-banner__text">
+          <strong>Ce qui différencie TalentConnect :</strong> des producteurs, labels et organisateurs publient leurs recherches directement sur la plateforme. Postulez en un clic, sans exposer vos coordonnées privées.
+        </p>
+      </div>
+
+      <div class="opportunities-grid">
+        <article class="opportunity-card reveal">
+          <span class="opportunity-card__label">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="4"/></svg>
+            Recherche active
+          </span>
+          <h3 class="opportunity-card__title">Recherche chanteuse pop</h3>
+          <p class="opportunity-card__location">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Lyon
+          </p>
+          <div class="opportunity-card__footer">
+            <a href="#" class="opportunity-card__cta">
+              Voir l'opportunité
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+        </article>
+
+        <article class="opportunity-card reveal">
+          <span class="opportunity-card__label">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="4"/></svg>
+            Recherche active
+          </span>
+          <h3 class="opportunity-card__title">Recherche groupe rock</h3>
+          <p class="opportunity-card__location">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Grenoble
+          </p>
+          <div class="opportunity-card__footer">
+            <a href="#" class="opportunity-card__cta">
+              Voir l'opportunité
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+        </article>
+
+        <article class="opportunity-card reveal">
+          <span class="opportunity-card__label">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="4"/></svg>
+            Recherche active
+          </span>
+          <h3 class="opportunity-card__title">Recherche guitariste studio</h3>
+          <p class="opportunity-card__location">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Paris
+          </p>
+          <div class="opportunity-card__footer">
+            <a href="#" class="opportunity-card__cta">
+              Voir l'opportunité
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+        </article>
+
+        <article class="opportunity-card reveal">
+          <span class="opportunity-card__label">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="4"/></svg>
+            Recherche active
+          </span>
+          <h3 class="opportunity-card__title">Recherche artiste électro</h3>
+          <p class="opportunity-card__location">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Marseille
+          </p>
+          <div class="opportunity-card__footer">
+            <a href="#" class="opportunity-card__cta">
+              Voir l'opportunité
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section : Dernières vidéos -->
+  <section class="section section--dark" id="dernieres-videos">
+    <div class="container">
+      <div class="section__header reveal">
+        <div>
+          <h2 class="section__title">Dernières vidéos</h2>
+          <p class="section__subtitle">Les performances les plus récentes de notre communauté</p>
+        </div>
+      </div>
+
+      <div class="videos-grid">
+        <article class="video-card reveal">
+          <div class="video-card__thumb">
+            <img src="{{ asset('images/videos/midnight-blues.jpg') }}" alt="Midnight Blues Session" loading="lazy">
+            <div class="video-card__play"><span class="video-card__play-btn"><svg width="24" height="24" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg></span></div>
+            <span class="video-card__duration">4:32</span>
+          </div>
+          <div class="video-card__body">
+            <h3 class="video-card__title">Midnight Blues Session — John Smith</h3>
+            <div class="video-card__meta">
+              <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> 12 450 vues</span>
+              <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> 892 likes</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="video-card reveal">
+          <div class="video-card__thumb">
+            <img src="{{ asset('images/videos/neon-dreams.jpg') }}" alt="Neon Dreams" loading="lazy">
+            <div class="video-card__play"><span class="video-card__play-btn"><svg width="24" height="24" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg></span></div>
+            <span class="video-card__duration">3:18</span>
+          </div>
+          <div class="video-card__body">
+            <h3 class="video-card__title">Neon Dreams — Luna Waves</h3>
+            <div class="video-card__meta">
+              <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> 8 720 vues</span>
+              <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> 654 likes</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="video-card reveal">
+          <div class="video-card__thumb">
+            <img src="{{ asset('images/videos/flow-state.jpg') }}" alt="Flow State" loading="lazy">
+            <div class="video-card__play"><span class="video-card__play-btn"><svg width="24" height="24" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg></span></div>
+            <span class="video-card__duration">5:01</span>
+          </div>
+          <div class="video-card__body">
+            <h3 class="video-card__title">Flow State — MC Horizon</h3>
+            <div class="video-card__meta">
+              <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> 15 300 vues</span>
+              <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> 1 204 likes</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="video-card reveal">
+          <div class="video-card__thumb">
+            <img src="{{ asset('images/videos/acoustic-sunrise.jpg') }}" alt="Acoustic Sunrise" loading="lazy">
+            <div class="video-card__play"><span class="video-card__play-btn"><svg width="24" height="24" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg></span></div>
+            <span class="video-card__duration">6:15</span>
+          </div>
+          <div class="video-card__body">
+            <h3 class="video-card__title">Acoustic Sunrise — Les Échos</h3>
+            <div class="video-card__meta">
+              <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> 5 890 vues</span>
+              <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> 478 likes</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="video-card reveal">
+          <div class="video-card__thumb">
+            <img src="{{ asset('images/videos/deep-pulse.jpg') }}" alt="Deep Pulse Live" loading="lazy">
+            <div class="video-card__play"><span class="video-card__play-btn"><svg width="24" height="24" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg></span></div>
+            <span class="video-card__duration">7:44</span>
+          </div>
+          <div class="video-card__body">
+            <h3 class="video-card__title">Deep Pulse Live — DJ Nova</h3>
+            <div class="video-card__meta">
+              <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> 9 120 vues</span>
+              <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> 723 likes</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="video-card reveal">
+          <div class="video-card__thumb">
+            <img src="{{ asset('images/videos/velvet-voice.jpg') }}" alt="Velvet Voice" loading="lazy">
+            <div class="video-card__play"><span class="video-card__play-btn"><svg width="24" height="24" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg></span></div>
+            <span class="video-card__duration">3:55</span>
+          </div>
+          <div class="video-card__body">
+            <h3 class="video-card__title">Velvet Voice — Amara Soul</h3>
+            <div class="video-card__meta">
+              <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> 6 340 vues</span>
+              <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> 567 likes</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section : Comment ça marche -->
+  <section class="section section--warm" id="comment-ca-marche">
+    <div class="container">
+      <div class="section__header section__header--center reveal">
+        <h2 class="section__title">Comment ça marche ?</h2>
+        <p class="section__subtitle">Trois étapes simples pour rejoindre l'écosystème TalentConnect</p>
+      </div>
+
+      <div class="steps">
+        <article class="step reveal">
+          <div class="step__number">1</div>
+          <svg class="step__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>
+          </svg>
+          <h3 class="step__title">Publiez votre musique</h3>
+          <p class="step__text">Créez votre profil artiste et partagez vos vidéos musicales. Présentez votre univers créatif au monde entier.</p>
+        </article>
+
+        <article class="step reveal">
+          <div class="step__number">2</div>
+          <svg class="step__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><path d="M11 8v6M8 11h6"/>
+          </svg>
+          <h3 class="step__title">Faites-vous découvrir</h3>
+          <p class="step__text">Soyez visible auprès des professionnels de l'industrie. Vos performances sont mises en avant selon votre genre et votre région.</p>
+        </article>
+
+        <article class="step reveal">
+          <div class="step__number">3</div>
+          <svg class="step__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+          <h3 class="step__title">Entrez en relation avec des professionnels</h3>
+          <p class="step__text">Producteurs, labels et managers vous contactent directement via la plateforme. Vos coordonnées restent privées.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+</main>
+{% endblock %}
