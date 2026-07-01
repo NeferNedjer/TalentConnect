@@ -59,6 +59,35 @@ class ArtistProfileRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    /**
+     * @return list<ArtistProfile>
+     */
+    public function findLatestPublicProfiles(int $limit = 6): array
+    {
+        $ids = $this->createQueryBuilder('artist')
+            ->select('artist.id')
+            ->andWhere('artist.deletedAt IS NULL')
+            ->orderBy('artist.profileCompletion', 'DESC')
+            ->addOrderBy('artist.createdAt', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getSingleColumnResult();
+
+        if ($ids === []) {
+            return [];
+        }
+
+        return $this->createQueryBuilder('artist')
+            ->addSelect('genres')
+            ->leftJoin('artist.genres', 'genres')
+            ->andWhere('artist.id IN (:ids)')
+            ->setParameter('ids', $ids)
+            ->orderBy('artist.profileCompletion', 'DESC')
+            ->addOrderBy('artist.createdAt', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
     private function createPublicListQueryBuilder(
         ?string $search,
         ?string $city,

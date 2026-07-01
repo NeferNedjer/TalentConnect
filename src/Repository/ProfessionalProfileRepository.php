@@ -25,4 +25,13 @@ class ProfessionalProfileRepository extends ServiceEntityRepository
             'deletedAt' => null,
         ]);
     }
+
+    public function countPublicProfiles(): int
+    {
+        return (int) $this->createQueryBuilder('profile')
+            ->select('COUNT(profile.id)')
+            ->andWhere('profile.deletedAt IS NULL')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 }
