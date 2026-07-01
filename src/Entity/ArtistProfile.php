@@ -97,6 +97,12 @@ class ArtistProfile
     #[ORM\JoinTable(name: 'artist_profile_genre')]
     private Collection $genres;
 
+    /**
+     * @var Collection<int, Announcement>
+     */
+    #[ORM\OneToMany(targetEntity: Announcement::class, mappedBy: 'publisherArtist')]
+    private Collection $announcements;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
@@ -105,6 +111,7 @@ class ArtistProfile
         $this->isCertified = false;
         $this->verificationStatus = 'pending';
         $this->genres = new ArrayCollection();
+        $this->announcements = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -411,6 +418,30 @@ class ArtistProfile
         if ($this->genres->removeElement($genre)) {
             $genre->removeArtist($this);
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Announcement>
+     */
+    public function getAnnouncements(): Collection
+    {
+        return $this->announcements;
+    }
+
+    public function addAnnouncement(Announcement $announcement): static
+    {
+        if (!$this->announcements->contains($announcement)) {
+            $this->announcements->add($announcement);
+        }
+
+        return $this;
+    }
+
+    public function removeAnnouncement(Announcement $announcement): static
+    {
+        $this->announcements->removeElement($announcement);
 
         return $this;
     }
