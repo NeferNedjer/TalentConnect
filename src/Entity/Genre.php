@@ -8,11 +8,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\String\Slugger\AsciiSlugger;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'genre')]
-#[ORM\HasLifecycleCallbacks]
 class Genre
 {
     #[ORM\Id]
@@ -100,25 +98,6 @@ class Genre
         $this->updatedAt = $updatedAt;
 
         return $this;
-    }
-
-    #[ORM\PrePersist]
-    public function onPrePersist(): void
-    {
-        $this->generateSlug();
-    }
-
-    #[ORM\PreUpdate]
-    public function onPreUpdate(): void
-    {
-        $this->generateSlug();
-        $this->updatedAt = new \DateTimeImmutable();
-    }
-
-    private function generateSlug(): void
-    {
-        $slugger = new AsciiSlugger();
-        $this->slug = $slugger->slug($this->name)->lower()->toString();
     }
 
     /**
