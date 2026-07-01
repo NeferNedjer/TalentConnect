@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Form;
 
 use App\Entity\ArtistProfile;
+use App\Entity\Genre;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -81,6 +83,15 @@ class ArtistProfileType extends AbstractType
                     'Artiste solo' => 'solo',
                     'Groupe' => 'groupe',
                 ],
+            ])
+            ->add('genres', EntityType::class, [
+                'class' => Genre::class,
+                'choice_label' => 'name',
+                'multiple' => true,
+                'expanded' => true,
+                'label' => 'Genres musicaux',
+                'required' => false,
+                'help' => 'Sélectionnez un ou plusieurs genres.',
             ])
             ->add('spotifyUrl', UrlType::class, [
                 'label' => 'Spotify',

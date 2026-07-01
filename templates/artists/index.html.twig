@@ -11,6 +11,11 @@
   'solo': 'Solo',
   'groupe': 'Groupe'
 } %}
+	{% set pagination_query = {
+  search: filters.search,
+  city: filters.city,
+  type: filters.type,
+}|filter(v => v is not empty) %}
 
 	<main class="artists-page">
 		<section class="artists-page__header">
@@ -29,6 +34,48 @@
 
 		<section class="artists-page__content">
 			<div class="container">
+				<form class="artists-filters reveal" method="get" action="{{ path('app_artists') }}" role="search">
+					<label class="artists-filters__search">
+						<svg class="artists-filters__search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+							<circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+						</svg>
+						<input
+							type="search"
+							name="search"
+							class="artists-filters__input artists-filters__input--search form-group__input"
+							value="{{ filters.search }}"
+							placeholder="Rechercher un artiste…"
+							aria-label="Rechercher un artiste"
+							autocomplete="off"
+						>
+					</label>
+
+					<label class="artists-filters__field artists-filters__field--city">
+						<input
+							type="text"
+							name="city"
+							class="artists-filters__input form-group__input"
+							value="{{ filters.city }}"
+							placeholder="Ville"
+							aria-label="Ville"
+							autocomplete="off"
+						>
+					</label>
+
+					<label class="artists-filters__field artists-filters__field--type">
+						<select name="type" class="artists-filters__input artists-filters__select form-group__select" aria-label="Type">
+							<option value=""{{ filters.type == '' ? ' selected' : '' }}>Type</option>
+							<option value="solo"{{ filters.type == 'solo' ? ' selected' : '' }}>Solo</option>
+							<option value="groupe"{{ filters.type == 'groupe' ? ' selected' : '' }}>Groupe</option>
+						</select>
+					</label>
+
+					<div class="artists-filters__actions">
+						<button type="submit" class="btn btn--primary btn--sm">Rechercher</button>
+						<a href="{{ path('app_artists') }}" class="btn btn--secondary btn--sm">Réinitialiser</a>
+					</div>
+				</form>
+
 				{% if artists is empty %}
 					<div class="artists-empty reveal" role="status">
 						<div class="artists-empty__illustration" aria-hidden="true">
@@ -39,7 +86,13 @@
 								<circle cx="72" cy="72" r="8" fill="currentColor" opacity="0.85"/>
 							</svg>
 						</div>
-						<p class="artists-empty__text">Aucun artiste n'est encore inscrit.</p>
+						<p class="artists-empty__text">
+							{% if filters.active %}
+								Aucun artiste ne correspond à votre recherche.
+							{% else %}
+								Aucun artiste n'est encore inscrit.
+							{% endif %}
+						</p>
 					</div>
 				{% else %}
 					<div class="artists-list-grid">
@@ -101,7 +154,7 @@
 					{% if totalPages > 1 %}
 						<nav class="artists-pagination reveal" aria-label="Pagination des artistes">
 							{% if currentPage > 1 %}
-								<a href="{{ path('app_artists', { page: currentPage - 1 }) }}" class="artists-pagination__link artists-pagination__link--prev" rel="prev">
+								<a href="{{ path('app_artists', pagination_query|merge({ page: currentPage - 1 })) }}" class="artists-pagination__link artists-pagination__link--prev" rel="prev">
 									← Précédent
 								</a>
 							{% else %}
@@ -113,13 +166,13 @@
 									{% if page == currentPage %}
 										<span class="artists-pagination__page artists-pagination__page--active" aria-current="page">{{ page }}</span>
 									{% else %}
-										<a href="{{ path('app_artists', { page: page }) }}" class="artists-pagination__page">{{ page }}</a>
+										<a href="{{ path('app_artists', pagination_query|merge({ page: page })) }}" class="artists-pagination__page">{{ page }}</a>
 									{% endif %}
 								{% endfor %}
 							</div>
 
 							{% if currentPage < totalPages %}
-								<a href="{{ path('app_artists', { page: currentPage + 1 }) }}" class="artists-pagination__link artists-pagination__link--next" rel="next">
+								<a href="{{ path('app_artists', pagination_query|merge({ page: currentPage + 1 })) }}" class="artists-pagination__link artists-pagination__link--next" rel="next">
 									Suivant →
 								</a>
 							{% else %}

@@ -6,6 +6,7 @@ namespace App\Repository;
 
 use App\Entity\ArtistProfile;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -26,11 +27,10 @@ class ArtistProfileRepository extends ServiceEntityRepository
         ]);
     }
 
-    public function countPublicProfiles(): int
+    public function countPublicProfiles(?string $search = null, ?string $city = null, ?string $type = null): int
     {
-        return (int) $this->createQueryBuilder('artist')
+        return (int) $this->createPublicListQueryBuilder($search, $city, $type)
             ->select('COUNT(artist.id)')
-            ->andWhere('artist.deletedAt IS NULL')
             ->getQuery()
             ->getSingleScalarResult();
     }
@@ -38,15 +38,42 @@ class ArtistProfileRepository extends ServiceEntityRepository
     /**
      * @return list<ArtistProfile>
      */
-    public function findPublicProfilesPaginated(int $offset, int $limit): array
-    {
-        return $this->createQueryBuilder('artist')
-            ->andWhere('artist.deletedAt IS NULL')
+    public function findPublicProfilesPaginated(
+        int $offset,
+        int $limit,
+        ?string $search = null,
+        ?string $city = null,
+        ?string $type = null,
+    ): array {
+        return $this->createPublicListQueryBuilder($search, $city, $type)
             ->orderBy('artist.profileCompletion', 'DESC')
             ->addOrderBy('artist.createdAt', 'DESC')
             ->setFirstResult($offset)
             ->setMaxResults($limit)
             ->getQuery()
             ->getResult();
+    }
+
+    private function createPublicListQueryBuilder(?string $search, ?string $city, ?string $type): QueryBuilder
+    {
+        $qb = $this->createQueryBuilder('artist')
+            ->andWhere('artist.deletedAt IS NULL');
+
+        if ($search !== null && $search !== '') {
+            $qb->andWhere('LOWER(artist.stageName) LIKE :search')
+                ->setParameter('search', '%'.mb_strtolower($search).'%');
+        }
+
+        if ($city !== null && $city !== '') {
+            $qb->andWhere('LOWER(artist.city) LIKE :city')
+                ->setParameter('city', '%'.mb_strtolower($city).'%');
+        }
+
+        if ($type !== null && $type !== '' && \in_array($type, ['solo', 'groupe'], true)) {
+            $qb->andWhere('artist.artistType = :type')
+                ->setParameter('type', $type);
+        }
+
+        return $qb;
     }
 }

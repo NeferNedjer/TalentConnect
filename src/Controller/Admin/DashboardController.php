@@ -63,6 +63,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
         yield MenuItem::linkTo(UserCrudController::class, 'Utilisateurs', 'fa fa-users');
         yield MenuItem::linkTo(ArtistProfileCrudController::class, 'Profils artistes', 'fa fa-music');
+        yield MenuItem::linkTo(GenreCrudController::class, 'Genres', 'fa-solid fa-music');
         yield MenuItem::linkTo(ProfessionalProfileCrudController::class, 'Profils professionnels', 'fa fa-briefcase');
         yield MenuItem::linkToRoute('Retour au site', 'fa fa-arrow-left', 'app_home');
     }

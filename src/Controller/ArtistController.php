@@ -17,8 +17,20 @@ class ArtistController extends AbstractController
     #[Route('/artists', name: 'app_artists')]
     public function index(Request $request, ArtistProfileRepository $artistProfileRepository): Response
     {
+        $search = trim($request->query->getString('search', ''));
+        $city = trim($request->query->getString('city', ''));
+        $type = $request->query->getString('type', '');
+
+        if ($type !== '' && !\in_array($type, ['solo', 'groupe'], true)) {
+            $type = '';
+        }
+
+        $searchFilter = $search !== '' ? $search : null;
+        $cityFilter = $city !== '' ? $city : null;
+        $typeFilter = $type !== '' ? $type : null;
+
         $page = max(1, $request->query->getInt('page', 1));
-        $totalItems = $artistProfileRepository->countPublicProfiles();
+        $totalItems = $artistProfileRepository->countPublicProfiles($searchFilter, $cityFilter, $typeFilter);
         $totalPages = max(1, (int) ceil($totalItems / self::PER_PAGE));
 
         if ($page > $totalPages) {
@@ -28,6 +40,9 @@ class ArtistController extends AbstractController
         $artists = $artistProfileRepository->findPublicProfilesPaginated(
             ($page - 1) * self::PER_PAGE,
             self::PER_PAGE,
+            $searchFilter,
+            $cityFilter,
+            $typeFilter,
         );
 
         return $this->render('artists/index.html.twig', [
@@ -36,6 +51,12 @@ class ArtistController extends AbstractController
             'totalPages' => $totalPages,
             'totalItems' => $totalItems,
             'perPage' => self::PER_PAGE,
+            'filters' => [
+                'search' => $search,
+                'city' => $city,
+                'type' => $type,
+                'active' => $searchFilter !== null || $cityFilter !== null || $typeFilter !== null,
+            ],
         ]);
     }
 }
