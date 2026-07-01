@@ -141,6 +141,22 @@
             {{ form_widget(form.artistType, { attr: { class: 'form-group__select' } }) }}
             {{ form_errors(form.artistType) }}
           </div>
+
+          <div class="form-group form-group--genre-chips">
+            {{ form_label(form.genres, null, { label_attr: { class: 'form-group__label' } }) }}
+            <div class="genre-chip-list" role="group" aria-label="{{ form.genres.vars.label }}">
+              {% for genreField in form.genres %}
+                <label class="genre-chip">
+                  {{ form_widget(genreField, { attr: { class: 'genre-chip__input' } }) }}
+                  <span class="genre-chip__text">{{ genreField.vars.label }}</span>
+                </label>
+              {% endfor %}
+            </div>
+            {% if form.genres.vars.help %}
+              <p class="genre-chip-list__help">{{ form.genres.vars.help }}</p>
+            {% endif %}
+            {{ form_errors(form.genres) }}
+          </div>
         </fieldset>
 
         <fieldset class="form-section">

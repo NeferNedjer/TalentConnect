@@ -15,6 +15,7 @@
   search: filters.search,
   city: filters.city,
   type: filters.type,
+  genre: filters.genre,
 }|filter(v => v is not empty) %}
 
 	<main class="artists-page">
@@ -67,6 +68,15 @@
 							<option value=""{{ filters.type == '' ? ' selected' : '' }}>Type</option>
 							<option value="solo"{{ filters.type == 'solo' ? ' selected' : '' }}>Solo</option>
 							<option value="groupe"{{ filters.type == 'groupe' ? ' selected' : '' }}>Groupe</option>
+						</select>
+					</label>
+
+					<label class="artists-filters__field artists-filters__field--genre">
+						<select name="genre" class="artists-filters__input artists-filters__select form-group__select" aria-label="Genre">
+							<option value=""{{ filters.genre == '' ? ' selected' : '' }}>Tous les genres</option>
+							{% for genreOption in genres %}
+								<option value="{{ genreOption.slug }}"{{ filters.genre == genreOption.slug ? ' selected' : '' }}>{{ genreOption.name }}</option>
+							{% endfor %}
 						</select>
 					</label>
 
@@ -140,6 +150,15 @@
 												<svg width="14" height="14" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
 												{{ [artist.city, artist.country]|filter(v => v)|join(', ') }}
 											</span>
+										{% endif %}
+									</div>
+
+									<div class="artists-list-card__genres{% if artist.genres|length == 0 %} artists-list-card__genres--empty{% endif %}">
+										{% for genre in artist.genres|slice(0, 3) %}
+											<span class="badge badge--genre">{{ genre.name }}</span>
+										{% endfor %}
+										{% if artist.genres|length > 3 %}
+											<span class="badge badge--genre artists-list-card__genres-more">+{{ artist.genres|length - 3 }}</span>
 										{% endif %}
 									</div>
 

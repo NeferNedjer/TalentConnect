@@ -51,6 +51,16 @@
               </span>
             {% endif %}
           </div>
+          {% if profile.genres|length > 0 %}
+            <div class="profile-header__genres">
+              <p class="profile-header__genres-label">🎵 Genres musicaux</p>
+              <div class="profile-genres">
+                {% for genre in profile.genres %}
+                  <span class="badge badge--genre">{{ genre.name }}</span>
+                {% endfor %}
+              </div>
+            </div>
+          {% endif %}
         </div>
       </div>
     </div>

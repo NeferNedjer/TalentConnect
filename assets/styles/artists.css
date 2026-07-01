@@ -115,6 +115,10 @@
   flex-basis: 110px;
 }
 
+.artists-filters__field--genre {
+  flex-basis: 150px;
+}
+
 .artists-filters .artists-filters__input--search {
   padding-left: 42px;
 }
@@ -261,7 +265,7 @@
   z-index: 2;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
   padding: 22px 20px 24px;
   flex: 1;
 }
@@ -329,8 +333,30 @@
   color: var(--color-text-muted);
 }
 
+.artists-list-card__genres {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  align-items: flex-start;
+  gap: 6px;
+  min-height: 32px;
+  max-height: 32px;
+  overflow: hidden;
+}
+
+.artists-list-card__genres .badge {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.artists-list-card__genres-more {
+  flex-shrink: 0;
+}
+
 .artists-list-card__cta {
-  margin-top: auto;
+  margin-top: 0;
 }
 
 .artists-empty {
@@ -428,7 +454,8 @@
   }
 
   .artists-filters__field--city,
-  .artists-filters__field--type {
+  .artists-filters__field--type,
+  .artists-filters__field--genre {
     flex: 1 1 calc(50% - 5px);
   }
 
@@ -475,7 +502,8 @@
 
   .artists-filters__search,
   .artists-filters__field--city,
-  .artists-filters__field--type {
+  .artists-filters__field--type,
+  .artists-filters__field--genre {
     flex: 1 1 auto;
     width: 100%;
   }

@@ -27,10 +27,14 @@ class ArtistProfileRepository extends ServiceEntityRepository
         ]);
     }
 
-    public function countPublicProfiles(?string $search = null, ?string $city = null, ?string $type = null): int
-    {
-        return (int) $this->createPublicListQueryBuilder($search, $city, $type)
-            ->select('COUNT(artist.id)')
+    public function countPublicProfiles(
+        ?string $search = null,
+        ?string $city = null,
+        ?string $type = null,
+        ?string $genre = null,
+    ): int {
+        return (int) $this->createPublicListQueryBuilder($search, $city, $type, $genre)
+            ->select('COUNT(DISTINCT artist.id)')
             ->getQuery()
             ->getSingleScalarResult();
     }
@@ -44,8 +48,9 @@ class ArtistProfileRepository extends ServiceEntityRepository
         ?string $search = null,
         ?string $city = null,
         ?string $type = null,
+        ?string $genre = null,
     ): array {
-        return $this->createPublicListQueryBuilder($search, $city, $type)
+        return $this->createPublicListQueryBuilder($search, $city, $type, $genre)
             ->orderBy('artist.profileCompletion', 'DESC')
             ->addOrderBy('artist.createdAt', 'DESC')
             ->setFirstResult($offset)
@@ -54,8 +59,12 @@ class ArtistProfileRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    private function createPublicListQueryBuilder(?string $search, ?string $city, ?string $type): QueryBuilder
-    {
+    private function createPublicListQueryBuilder(
+        ?string $search,
+        ?string $city,
+        ?string $type,
+        ?string $genre,
+    ): QueryBuilder {
         $qb = $this->createQueryBuilder('artist')
             ->andWhere('artist.deletedAt IS NULL');
 
@@ -72,6 +81,12 @@ class ArtistProfileRepository extends ServiceEntityRepository
         if ($type !== null && $type !== '' && \in_array($type, ['solo', 'groupe'], true)) {
             $qb->andWhere('artist.artistType = :type')
                 ->setParameter('type', $type);
+        }
+
+        if ($genre !== null && $genre !== '') {
+            $qb->innerJoin('artist.genres', 'genre')
+                ->andWhere('genre.slug = :genre')
+                ->setParameter('genre', $genre);
         }
 
         return $qb;
