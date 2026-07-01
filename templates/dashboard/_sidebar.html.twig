@@ -1,0 +1,31 @@
+{% set has_profile = app.user and (app.user.artistProfile is not null or app.user.professionalProfile is not null) %}
+
+<nav class="dashboard-nav" aria-label="Menu du tableau de bord">
+  <p class="dashboard-nav__title">Mon espace</p>
+  <ul class="dashboard-nav__list">
+    <li>
+      <a href="{{ path('app_dashboard') }}" class="dashboard-nav__link{{ app.request.get('_route') == 'app_dashboard' ? ' dashboard-nav__link--active' : '' }}">
+        Tableau de bord
+      </a>
+    </li>
+    {% if has_profile %}
+      <li>
+        <a href="{{ path('app_dashboard_announcements') }}" class="dashboard-nav__link{{ app.request.get('_route') starts with 'app_dashboard_announcement' ? ' dashboard-nav__link--active' : '' }}">
+          Mes annonces
+        </a>
+      </li>
+    {% endif %}
+    {% if is_granted('ROLE_ARTIST') and app.user.artistProfile %}
+      <li>
+        <a href="{{ path('app_artist_profile_edit') }}" class="dashboard-nav__link{{ app.request.get('_route') == 'app_artist_profile_edit' ? ' dashboard-nav__link--active' : '' }}">Mon profil artiste</a>
+      </li>
+    {% elseif is_granted('ROLE_PRO') and app.user.professionalProfile %}
+      <li>
+        <a href="{{ path('app_professional_profile_edit') }}" class="dashboard-nav__link{{ app.request.get('_route') == 'app_professional_profile_edit' ? ' dashboard-nav__link--active' : '' }}">Mon profil professionnel</a>
+      </li>
+    {% endif %}
+    <li>
+      <a href="{{ path('app_home') }}" class="dashboard-nav__link">Retour au site</a>
+    </li>
+  </ul>
+</nav>

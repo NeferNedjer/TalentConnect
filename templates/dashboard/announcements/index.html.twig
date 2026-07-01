@@ -1,0 +1,46 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}Mes annonces | TalentConnect{% endblock %}
+
+{% block dashboard_content %}
+  <header class="dashboard-page-header reveal">
+    <div class="dashboard-page-header__content">
+      <h1 class="dashboard-page-header__title">Mes annonces</h1>
+      <p class="dashboard-page-header__subtitle">Gérez vos annonces et trouvez de nouvelles opportunités.</p>
+    </div>
+    <div class="dashboard-page-header__actions">
+      <a href="{{ path('app_dashboard_announcement_create') }}" class="btn btn--primary btn--sm">
+        Créer une annonce
+      </a>
+    </div>
+  </header>
+
+  <section class="dashboard-section reveal" aria-labelledby="announcements-list-title">
+    <h2 id="announcements-list-title" class="visually-hidden">Liste de vos annonces</h2>
+
+    {% if announcements is empty %}
+      <div class="dashboard-empty" role="status">
+        <div class="dashboard-empty__illustration" aria-hidden="true">
+          <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <circle cx="60" cy="60" r="58" stroke="currentColor" stroke-width="2" opacity="0.25"/>
+            <svg x="20" y="20" width="80" height="80" viewBox="0 0 64 64" fill="none" opacity="0.25" aria-hidden="true">
+              <path d="M24 48V20l28-5v28" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="18" cy="48" r="6" stroke="currentColor" stroke-width="2.5"/>
+              <circle cx="46" cy="43" r="6" stroke="currentColor" stroke-width="2.5"/>
+            </svg>
+          </svg>
+        </div>
+        <p class="dashboard-empty__text">Aucune annonce publiée pour le moment.</p>
+        <a href="{{ path('app_dashboard_announcement_create') }}" class="btn btn--primary">
+          Créer ma première annonce
+        </a>
+      </div>
+    {% else %}
+      <div class="announcements-grid">
+        {% for announcement in announcements %}
+          {% include 'dashboard/announcements/_card.html.twig' with { announcement: announcement } only %}
+        {% endfor %}
+      </div>
+    {% endif %}
+  </section>
+{% endblock %}

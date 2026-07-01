@@ -9,4 +9,5 @@ import './styles/app.css';
 import './styles/home.css';
 import './styles/artist-profile.css';
 import './styles/artists.css';
+import './styles/dashboard.css';
 import './talentconnect.js';

@@ -1,0 +1,151 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}Créer une annonce | TalentConnect{% endblock %}
+
+{% block dashboard_content %}
+  <header class="dashboard-page-header reveal">
+    <div class="dashboard-page-header__content">
+      <h1 class="dashboard-page-header__title">Créer une annonce</h1>
+      <p class="dashboard-page-header__subtitle">Présentez votre opportunité aux artistes et professionnels de TalentConnect.</p>
+    </div>
+  </header>
+
+  {{ form_start(form, {
+    attr: {
+      class: 'announcement-form reveal',
+      novalidate: 'novalidate',
+      'data-announcement-form': ''
+    }
+  }) }}
+
+  <section class="dashboard-form-section" aria-labelledby="section-info-title">
+    <header class="dashboard-form-section__header">
+      <h2 class="dashboard-form-section__title" id="section-info-title">Informations</h2>
+      <p class="dashboard-form-section__help">Rédigez un titre clair et une description détaillée pour attirer les bons profils.</p>
+    </header>
+    <div class="dashboard-form-section__body">
+      <div class="form-group">
+        {{ form_label(form.title, null, { label_attr: { class: 'form-group__label' } }) }}
+        {{ form_widget(form.title, { attr: { class: 'form-group__input' } }) }}
+        {{ form_errors(form.title) }}
+      </div>
+      <div class="form-group">
+        {{ form_label(form.description, null, { label_attr: { class: 'form-group__label' } }) }}
+        {{ form_widget(form.description, { attr: { class: 'form-group__textarea' } }) }}
+        {{ form_errors(form.description) }}
+      </div>
+    </div>
+  </section>
+
+  <section class="dashboard-form-section" aria-labelledby="section-type-title">
+    <header class="dashboard-form-section__header">
+      <h2 class="dashboard-form-section__title" id="section-type-title">Type d'annonce</h2>
+      <p class="dashboard-form-section__help">Indiquez la nature de votre recherche pour faciliter le ciblage.</p>
+    </header>
+    <div class="dashboard-form-section__body">
+      <div class="form-group">
+        {{ form_label(form.announcementType, null, { label_attr: { class: 'form-group__label' } }) }}
+        {{ form_widget(form.announcementType, { attr: { class: 'form-group__select' } }) }}
+        {{ form_errors(form.announcementType) }}
+      </div>
+    </div>
+  </section>
+
+  <section class="dashboard-form-section" aria-labelledby="section-genres-title">
+    <header class="dashboard-form-section__header">
+      <h2 class="dashboard-form-section__title" id="section-genres-title">Genres</h2>
+      <p class="dashboard-form-section__help">Sélectionnez un ou plusieurs genres musicaux concernés par cette annonce.</p>
+    </header>
+    <div class="dashboard-form-section__body">
+      <div class="form-group form-group--genre-chips">
+        {{ form_label(form.genres, null, { label_attr: { class: 'form-group__label visually-hidden' } }) }}
+        <div class="genre-chip-list" role="group" aria-label="{{ form.genres.vars.label }}">
+          {% for genreField in form.genres %}
+            <label class="genre-chip">
+              {{ form_widget(genreField, { attr: { class: 'genre-chip__input' } }) }}
+              <span class="genre-chip__text">{{ genreField.vars.label }}</span>
+            </label>
+          {% endfor %}
+        </div>
+        {{ form_errors(form.genres) }}
+      </div>
+    </div>
+  </section>
+
+  <section class="dashboard-form-section" aria-labelledby="section-location-title">
+    <header class="dashboard-form-section__header">
+      <h2 class="dashboard-form-section__title" id="section-location-title">Localisation</h2>
+      <p class="dashboard-form-section__help">Précisez le lieu ou indiquez si l'opportunité peut se faire à distance.</p>
+    </header>
+    <div class="dashboard-form-section__body">
+      <div class="form-row">
+        <div class="form-group">
+          {{ form_label(form.city, null, { label_attr: { class: 'form-group__label' } }) }}
+          {{ form_widget(form.city, { attr: { class: 'form-group__input' } }) }}
+          {{ form_errors(form.city) }}
+        </div>
+        <div class="form-group">
+          {{ form_label(form.region, null, { label_attr: { class: 'form-group__label' } }) }}
+          {{ form_widget(form.region, { attr: { class: 'form-group__input' } }) }}
+          {{ form_errors(form.region) }}
+        </div>
+      </div>
+      <div class="form-group">
+        {{ form_label(form.country, null, { label_attr: { class: 'form-group__label' } }) }}
+        {{ form_widget(form.country, { attr: { class: 'form-group__input' } }) }}
+        {{ form_errors(form.country) }}
+      </div>
+      <div class="form-group">
+        <label class="form-check form-check--inline">
+          {{ form_widget(form.isRemote, { label: false, attr: { class: 'form-check__input' } }) }}
+          <span class="form-check__box" aria-hidden="true"></span>
+          <span class="form-check__label">{{ form.isRemote.vars.label }}</span>
+        </label>
+        {{ form_errors(form.isRemote) }}
+      </div>
+    </div>
+  </section>
+
+  <section class="dashboard-form-section" aria-labelledby="section-remuneration-title">
+    <header class="dashboard-form-section__header">
+      <h2 class="dashboard-form-section__title" id="section-remuneration-title">Rémunération</h2>
+      <p class="dashboard-form-section__help">Soyez transparent sur les conditions financières ou la négociation possible.</p>
+    </header>
+    <div class="dashboard-form-section__body">
+      <div class="form-row form-row--remuneration">
+        <div class="form-group">
+          {{ form_label(form.remunerationType, null, { label_attr: { class: 'form-group__label' } }) }}
+          {{ form_widget(form.remunerationType, { attr: { class: 'form-group__select', 'data-remuneration-type': '' } }) }}
+          {{ form_errors(form.remunerationType) }}
+        </div>
+        <div class="form-group announcement-form__amount-field" data-remuneration-amount-field hidden>
+          {{ form_label(form.remunerationAmount, null, { label_attr: { class: 'form-group__label' } }) }}
+          {{ form_widget(form.remunerationAmount, { attr: { class: 'form-group__input' } }) }}
+          <p class="dashboard-form-section__field-hint">Indiquez le montant proposé en euros.</p>
+          {{ form_errors(form.remunerationAmount) }}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="dashboard-form-section" aria-labelledby="section-publication-title">
+    <header class="dashboard-form-section__header">
+      <h2 class="dashboard-form-section__title" id="section-publication-title">Publication</h2>
+      <p class="dashboard-form-section__help">Définissez une date limite après laquelle votre annonce ne sera plus visible.</p>
+    </header>
+    <div class="dashboard-form-section__body">
+      <div class="form-group">
+        {{ form_label(form.expiresAt, null, { label_attr: { class: 'form-group__label' } }) }}
+        {{ form_widget(form.expiresAt, { attr: { class: 'form-group__input' } }) }}
+        {{ form_errors(form.expiresAt) }}
+      </div>
+    </div>
+  </section>
+
+  <div class="announcement-form__actions">
+    <a href="{{ path('app_dashboard_announcements') }}" class="btn btn--secondary">Annuler</a>
+    <button type="submit" class="btn btn--primary">Publier mon annonce</button>
+  </div>
+
+  {{ form_end(form) }}
+{% endblock %}

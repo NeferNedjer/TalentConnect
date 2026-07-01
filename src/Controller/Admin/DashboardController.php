@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Admin;
 
+use App\Entity\Announcement;
 use App\Entity\ArtistProfile;
 use App\Entity\ProfessionalProfile;
 use App\Entity\User;
@@ -30,6 +31,7 @@ class DashboardController extends AbstractDashboardController
         $userRepository = $this->entityManager->getRepository(User::class);
         $artistRepository = $this->entityManager->getRepository(ArtistProfile::class);
         $professionalRepository = $this->entityManager->getRepository(ProfessionalProfile::class);
+        $announcementRepository = $this->entityManager->getRepository(Announcement::class);
 
         /** @var AdminUrlGenerator $adminUrlGenerator */
         $adminUrlGenerator = $this->container->get(AdminUrlGenerator::class);
@@ -40,13 +42,14 @@ class DashboardController extends AbstractDashboardController
                 'artists' => $artistRepository->count(['deletedAt' => null]),
                 'professionals' => $professionalRepository->count(['deletedAt' => null]),
                 'videos' => 0,
-                'opportunities' => 0,
+                'announcements' => $announcementRepository->count(['deletedAt' => null]),
             ],
             'latestUsers' => $userRepository->findBy([], ['createdAt' => 'DESC'], 5),
             'urls' => [
                 'users' => $adminUrlGenerator->setController(UserCrudController::class)->generateUrl(),
                 'artists' => $adminUrlGenerator->setController(ArtistProfileCrudController::class)->generateUrl(),
                 'professionals' => $adminUrlGenerator->setController(ProfessionalProfileCrudController::class)->generateUrl(),
+                'announcements' => $adminUrlGenerator->setController(AnnouncementCrudController::class)->generateUrl(),
                 'home' => $this->generateUrl('app_home'),
             ],
         ]);
@@ -63,8 +66,9 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
         yield MenuItem::linkTo(UserCrudController::class, 'Utilisateurs', 'fa fa-users');
         yield MenuItem::linkTo(ArtistProfileCrudController::class, 'Profils artistes', 'fa fa-music');
-        yield MenuItem::linkTo(GenreCrudController::class, 'Genres', 'fa-solid fa-music');
         yield MenuItem::linkTo(ProfessionalProfileCrudController::class, 'Profils professionnels', 'fa fa-briefcase');
+        yield MenuItem::linkTo(GenreCrudController::class, 'Genres', 'fa-solid fa-music');
+        yield MenuItem::linkTo(AnnouncementCrudController::class, 'Annonces', 'fa fa-bullhorn');
         yield MenuItem::linkToRoute('Retour au site', 'fa fa-arrow-left', 'app_home');
     }
 }

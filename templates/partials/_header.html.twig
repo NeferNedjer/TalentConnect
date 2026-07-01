@@ -6,35 +6,19 @@
 		<nav class="nav" aria-label="Navigation principale">
 			<a href="{{ path('app_home') }}" class="nav__link{{ app.request.get('_route') == 'app_home' ? ' nav__link--active' : '' }}">Accueil</a>
 			<a href="{{ path('app_artists') }}" class="nav__link{{ app.request.get('_route') == 'app_artists' ? ' nav__link--active' : '' }}">Artistes</a>
-			<a href="#" class="nav__link">Opportunités</a>
+			<a href="#" class="nav__link">Annonces</a>
 
-			<div class="header__actions header__actions--mobile">
-				{% if app.user %}
-					{% if is_granted('ROLE_ARTIST') %}
-						<a href="{{ path('app_artist_profile_edit') }}" class="btn btn--primary btn--block">Mon profil</a>
-					{% elseif is_granted('ROLE_PRO') %}
-						<a href="{{ path('app_professional_profile_edit') }}" class="btn btn--primary btn--block">Mon profil</a>
-					{% else %}
-						<a href="{{ path('app_my_profile') }}" class="btn btn--primary btn--block">Mon profil</a>
-					{% endif %}
-					<a href="{{ path('app_logout') }}" class="btn btn--secondary btn--block">Déconnexion</a>
-				{% else %}
+			{% if not app.user %}
+				<div class="header__actions header__actions--mobile">
 					<a href="{{ path('app_login') }}" class="btn btn--secondary btn--block">Connexion</a>
 					<a href="{{ path('app_register') }}" class="btn btn--primary btn--block">Inscription</a>
-				{% endif %}
-			</div>
+				</div>
+			{% endif %}
 		</nav>
 
-		<div class="header__actions">
+		<div class="header__actions{{ app.user ? ' header__actions--authenticated' : '' }}">
 			{% if app.user %}
-				{% if is_granted('ROLE_ARTIST') %}
-					<a href="{{ path('app_artist_profile_edit') }}" class="btn btn--primary btn--sm">Mon profil</a>
-				{% elseif is_granted('ROLE_PRO') %}
-					<a href="{{ path('app_professional_profile_edit') }}" class="btn btn--primary btn--sm">Mon profil</a>
-				{% else %}
-					<a href="{{ path('app_my_profile') }}" class="btn btn--primary btn--sm">Mon profil</a>
-				{% endif %}
-				<a href="{{ path('app_logout') }}" class="btn btn--secondary btn--sm">Déconnexion</a>
+				{% include 'partials/_user_menu.html.twig' %}
 			{% else %}
 				<a href="{{ path('app_login') }}" class="btn btn--secondary btn--sm">Connexion</a>
 				<a href="{{ path('app_register') }}" class="btn btn--primary btn--sm">Inscription</a>

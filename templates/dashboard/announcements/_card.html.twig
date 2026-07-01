@@ -1,0 +1,85 @@
+{% set announcement_type_labels = {
+  'seeking_musician': 'Recherche musicien',
+  'seeking_group': 'Recherche groupe',
+  'seeking_collaboration': 'Collaboration',
+  'seeking_teacher': 'Recherche professeur',
+  'seeking_student': 'Recherche élève',
+  'other': 'Autre'
+} %}
+{% set announcement_status_labels = {
+  'published': 'Publié',
+  'draft': 'Brouillon',
+  'archived': 'Archivé',
+  'closed': 'Fermé'
+} %}
+{% set announcement_status_badge = {
+  'published': 'announcement-card__status--published',
+  'draft': 'announcement-card__status--draft',
+  'archived': 'announcement-card__status--archived',
+  'closed': 'announcement-card__status--closed'
+} %}
+
+<article class="announcement-card reveal">
+  <div class="announcement-card__header">
+    <h3 class="announcement-card__title">{{ announcement.title }}</h3>
+    <span class="announcement-card__status {{ announcement_status_badge[announcement.status.value] }}">
+      {{ announcement_status_labels[announcement.status.value] }}
+    </span>
+  </div>
+
+  <div class="announcement-card__body">
+    <p class="announcement-card__type">
+      <span class="announcement-card__label">Type</span>
+      {{ announcement_type_labels[announcement.announcementType.value] }}
+    </p>
+
+    <div class="announcement-card__genres{% if announcement.genres|length == 0 %} announcement-card__genres--empty{% endif %}">
+      <span class="announcement-card__label">Genres</span>
+      <div class="announcement-card__genre-list">
+        {% for genre in announcement.genres|slice(0, 3) %}
+          <span class="badge badge--genre">{{ genre.name }}</span>
+        {% endfor %}
+        {% if announcement.genres|length > 3 %}
+          <span class="badge badge--genre announcement-card__genres-more">+{{ announcement.genres|length - 3 }}</span>
+        {% endif %}
+        {% if announcement.genres|length == 0 %}
+          <span class="announcement-card__muted">Non renseignés</span>
+        {% endif %}
+      </div>
+    </div>
+
+    <p class="announcement-card__location">
+      <span class="announcement-card__label">Localisation</span>
+      {% if announcement.city or announcement.country %}
+        {{ [announcement.city, announcement.country]|filter(v => v)|join(', ') }}
+      {% else %}
+        <span class="announcement-card__muted">Non renseignée</span>
+      {% endif %}
+    </p>
+
+    <div class="announcement-card__dates">
+      <p class="announcement-card__date">
+        <span class="announcement-card__label">Publié le</span>
+        {% if announcement.publishedAt %}
+          <time datetime="{{ announcement.publishedAt|date('Y-m-d') }}">{{ announcement.publishedAt|date('d/m/Y') }}</time>
+        {% else %}
+          <span class="announcement-card__muted">—</span>
+        {% endif %}
+      </p>
+      <p class="announcement-card__date">
+        <span class="announcement-card__label">Expire le</span>
+        {% if announcement.expiresAt %}
+          <time datetime="{{ announcement.expiresAt|date('Y-m-d') }}">{{ announcement.expiresAt|date('d/m/Y') }}</time>
+        {% else %}
+          <span class="announcement-card__muted">—</span>
+        {% endif %}
+      </p>
+    </div>
+  </div>
+
+  <div class="announcement-card__actions">
+    <a href="{{ path('app_dashboard_announcement_show', { id: announcement.id }) }}" class="btn btn--secondary btn--sm">Voir</a>
+    <a href="{{ path('app_dashboard_announcement_edit', { id: announcement.id }) }}" class="btn btn--secondary btn--sm">Modifier</a>
+    <a href="{{ path('app_dashboard_announcement_delete', { id: announcement.id }) }}" class="btn btn--secondary btn--sm announcement-card__action--danger">Supprimer</a>
+  </div>
+</article>

@@ -1,10 +1,10 @@
-{% extends 'base.html.twig' %}
+{% extends 'dashboard/base.html.twig' %}
 
 {% block title %}Modifier mon profil professionnel | TalentConnect{% endblock %}
 
-{% block body_class %}artist-profile-edit-page{% endblock %}
+{% block body_class %}dashboard-page artist-profile-edit-page{% endblock %}
 
-{% block body %}
+{% block dashboard_content %}
 {% set professional_type_labels = {
   'label': 'Label',
   'studio': 'Studio',
@@ -21,18 +21,10 @@
   : '?'
 %}
 
-<main class="artist-profile-edit">
-  <div class="container artist-profile-edit__container">
-    <header class="artist-profile-edit__header reveal">
+<header class="artist-profile-edit__header reveal">
       <h1 class="artist-profile-edit__title">Mon profil professionnel</h1>
       <p class="artist-profile-edit__subtitle">Complétez votre profil pour être visible auprès des artistes de la plateforme.</p>
     </header>
-
-    {% for label, messages in app.flashes %}
-      {% for message in messages %}
-        <div class="flash-alert flash-alert--{{ label }}" role="alert">{{ message }}</div>
-      {% endfor %}
-    {% endfor %}
 
     <div class="artist-profile-edit__layout">
       <aside class="profile-summary-card reveal">
@@ -83,8 +75,9 @@
           }
         }) }}
 
-        <fieldset class="form-section">
-          <legend class="form-section__legend">Médias</legend>
+        <fieldset class="form-section" aria-labelledby="section-media-title">
+          <legend class="visually-hidden">Médias</legend>
+          <h2 class="form-section__title" id="section-media-title">Médias</h2>
 
           <div class="image-upload-grid">
             <div class="image-upload">
@@ -121,8 +114,9 @@
           </div>
         </fieldset>
 
-        <fieldset class="form-section">
-          <legend class="form-section__legend">Entreprise</legend>
+        <fieldset class="form-section" aria-labelledby="section-company-title">
+          <legend class="visually-hidden">Entreprise</legend>
+          <h2 class="form-section__title" id="section-company-title">Entreprise</h2>
 
           <div class="form-group">
             {{ form_label(form.companyName, null, { label_attr: { class: 'form-group__label' } }) }}
@@ -149,8 +143,9 @@
           </div>
         </fieldset>
 
-        <fieldset class="form-section">
-          <legend class="form-section__legend">Coordonnées</legend>
+        <fieldset class="form-section" aria-labelledby="section-contact-title">
+          <legend class="visually-hidden">Coordonnées</legend>
+          <h2 class="form-section__title" id="section-contact-title">Coordonnées</h2>
 
           <div class="form-row">
             <div class="form-group">
@@ -166,8 +161,9 @@
           </div>
         </fieldset>
 
-        <fieldset class="form-section">
-          <legend class="form-section__legend">Localisation</legend>
+        <fieldset class="form-section" aria-labelledby="section-location-title">
+          <legend class="visually-hidden">Localisation</legend>
+          <h2 class="form-section__title" id="section-location-title">Localisation</h2>
 
           <div class="form-row">
             <div class="form-group">
@@ -203,6 +199,4 @@
         {{ form_end(form) }}
       </div>
     </div>
-  </div>
-</main>
 {% endblock %}

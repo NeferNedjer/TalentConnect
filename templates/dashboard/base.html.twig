@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block body_class %}dashboard-page{% endblock %}
+
+{% block body %}
+<main class="dashboard">
+  <div class="container dashboard__container">
+    <div class="dashboard__layout dashboard__layout--with-nav">
+      {% include 'dashboard/_sidebar.html.twig' %}
+
+      <div class="dashboard__main">
+        {% for label, messages in app.flashes %}
+          {% for message in messages %}
+            <div class="flash-alert flash-alert--{{ label }}" role="alert">{{ message }}</div>
+          {% endfor %}
+        {% endfor %}
+
+        {% block dashboard_content %}{% endblock %}
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock %}
